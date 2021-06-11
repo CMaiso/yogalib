@@ -1,5 +1,3 @@
-import * as fb from "../plugins/firebase";
-
 //state of the application
 export const state = () => ({
   authUser: null,
@@ -25,19 +23,19 @@ export const mutations = {
 
 //update the state always asynchronous. Very helpful if you need to perform mutation in a particular order, or reach out to a server
 export const actions = {
-  async signInAction({ commit }, credentials) {
+  async signInAction({commit}, {email, password}) {
     try {
-      const user = await fb.auth.signInWithEmailAndPassword(
-        credentials.email,
-        credentials.password
+      const {user} = await this.$firebase.auth.signInWithEmailAndPassword(
+        email,
+        password
       )
-      commit('SET_USER', user)
+      commit('SET_USER', {uid: user.uid, email: user.email, displayName: user.displayName})
     } catch (e) {
       commit('SET_ERROR', e.message)
     }
   },
 
-  async signOut({ commit }) {
+  async signOut({commit}) {
     try {
       await fb.auth.signOut()
       commit('SET_USER', null)
