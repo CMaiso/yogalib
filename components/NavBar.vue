@@ -19,8 +19,8 @@
           </button>
           <button
             class=""
-            v-if="isUserAuth">
-            <nuxt-link to="/login">Déconnexion</nuxt-link>
+            v-if="isUserAuth" @click="signOut">
+            Déconnexion
           </button>
         </li>
       </ul>
@@ -29,13 +29,21 @@
 </template>
 
 <script>
-import {mapGetters} from 'vuex'
+import {mapActions, mapGetters} from 'vuex'
 
 export default {
   name: "NavBar",
   computed: {
     ...mapGetters(['getUser', 'isUserAuth'])
   },
+  methods: {
+    ...mapActions([
+      'signOutAction',
+    ]),
+    signOut() {
+      this.signOutAction();
+    }
+  }
 }
 
 </script>

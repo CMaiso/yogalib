@@ -41,9 +41,9 @@ export const actions = {
     }
   },
 
-  async signOut({commit}) {
+  async signOutAction({commit}) {
     try {
-      await this.$firebase.signOut()
+      await this.$firebase.auth.signOut()
       commit('SET_USER', null)
     } catch (e) {
       commit('SET_ERROR', e.message)

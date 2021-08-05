@@ -1,15 +1,25 @@
 <template>
   <section class="flex w-full min-h-screen justify-center items-center bg-gray-50 max-w-full">
-    <form class="text-left bg-white rounded-xl shadow-lg p-8 flex flex-col" @submit.prevent="signIn()">
+    {{ getError }}
+    <div v-if="validationErrors.length"
+         class="">
+      <ul style="">
+        <li
+          v-for="(error, index) in validationErrors"
+          :key="`error-${index}`"
+          v-html="error"
+        />
+      </ul>
+    </div>
+    <form class="text-left bg-white rounded-xl shadow-lg p-8 flex flex-col" @submit.prevent="validate()">
       <h2 class="text-center text-3xl font-extrabold text-pink-700 mb-8">
         Se connecter
       </h2>
       <label class="mb-1">Email</label>
-      <input class="ring-1 ring-gray-300 w-full rounded-md px-4 py-2 outline-none mb-4" type="email" v-model="email"
-             required/>
+      <input class="ring-1 ring-gray-300 w-full rounded-md px-4 py-2 outline-none mb-4" type="email" v-model="email"/>
       <label class="mb-1">Mot de passe</label>
-      <input class="ring-1 ring-gray-300 w-full rounded-md px-4 py-2 outline-none mb-4" type="password" v-model="password"
-             required/>
+      <input class="ring-1 ring-gray-300 w-full rounded-md px-4 py-2 outline-none mb-4" type="password"
+             v-model="password"/>
       <div class="flex items-center justify-between">
         <div class="flex items-center">
           <input id="remember-me" name="remember-me" type="checkbox"
@@ -49,13 +59,29 @@ export default {
     ...mapActions([
       'signInAction',
     ]),
+    resetError() {
+      this.validationErrors = [];
+    },
+    validate() {
+      this.resetError();
+
+      if (!this.email) {
+        this.validationErrors.push("<strong>E-mail</strong> cannot be empty.");
+      }
+      if (!this.password) {
+        this.validationErrors.push("<strong>Password</strong> cannot be empty");
+      }
+      if (this.validationErrors.length <= 0) {
+        this.signIn();
+      }
+    },
     signIn() {
       this.signInAction({email: this.email, password: this.password})
     }
   },
   props: {},
   computed: {
-    ...mapGetters(['getUser', 'isUserAuth'])
+    ...mapGetters(['getUser', 'isUserAuth', 'getError'])
   },
 }
 </script>
