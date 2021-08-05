@@ -1,6 +1,6 @@
 <template>
   <section class="">
-    <form class="" @submit.prevent="signIn()">
+    <form class="" @submit.prevent="newUserSignUp()">
       <label>
         Email
         <input type="email" v-model="email" required/>
@@ -9,14 +9,22 @@
         Mot de passe
         <input type="password" v-model="password" required/>
       </label>
-      <button type="submit">Se connecter</button>
-      <a href="/">Mot de passe oublié ?</a>
+      <label>
+        Prénom
+        <input type="text" v-model="firstName" required/>
+      </label>
+      <label>
+        Nom
+        <input type="text" v-model="lastName" required/>
+      </label>
+      <button type="submit">Créer son compte</button>
     </form>
   </section>
 </template>
 
 <script>
-import { mapActions } from 'vuex';
+import { startCase } from "lodash";
+import { toLower } from "lodash";
 
 export default {
   name: `SignUp`,
@@ -31,11 +39,22 @@ export default {
     }
   },
   methods: {
-    ...mapActions([
+    firstLetterCapitalize(name) {
+      return startCase(toLower(name));
+    },
+    newUserSignUp() {
+      const newUserSignUp = this.$firebase.functions().httpsCallable("newUserSignUp");
 
-    ]),
-    signUp() {
-
+      newUserSignUp({
+        email: this.email.toLowerCase(),
+        password: this.password,
+        firstName: this.firstLetterCapitalize(this.firstName),
+        lastName: this.firstLetterCapitalize(this.lastName),
+        phone: this.phone,
+      });
+    },
+    sendMailConfirmation() {
+      this.$firebase.functions().httpsCallable("sendMailConfirmation");
     }
   },
   props: {

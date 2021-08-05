@@ -1,6 +1,6 @@
 import * as functions from "firebase-functions";
 import * as crypto from "crypto";
-// import * as nodemailer from "nodemailer";
+import * as nodemailer from "nodemailer";
 
 import * as admin from "firebase-admin";
 

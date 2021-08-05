@@ -5,11 +5,17 @@ export const state = () => ({
 })
 
 //read the value but not mutate the state
-// export const getters = {
-//   getterValue: state => {
-//     return state.value
-//   }
-// }
+export const getters = {
+  getUser(state) {
+    return state.authUser;
+  },
+  isUserAuth(state) {
+    return !!state.authUser;
+  },
+  getError(state) {
+    return state.error;
+  }
+}
 
 //update the state, always synchronous. It's the only way to change data in the store
 export const mutations = {
@@ -29,7 +35,7 @@ export const actions = {
         email,
         password
       )
-      commit('SET_USER', {uid: user.uid, email: user.email, displayName: user.displayName})
+      commit('SET_USER', {uid: user.uid, email: user.email})
     } catch (e) {
       commit('SET_ERROR', e.message)
     }
@@ -37,7 +43,7 @@ export const actions = {
 
   async signOut({commit}) {
     try {
-      await fb.auth.signOut()
+      await this.$firebase.signOut()
       commit('SET_USER', null)
     } catch (e) {
       commit('SET_ERROR', e.message)
