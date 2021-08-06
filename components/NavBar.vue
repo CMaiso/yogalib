@@ -38,12 +38,15 @@ export default {
   },
   methods: {
     ...mapActions([
-      'signOutAction',
+      'signOutAction', 'authAction'
     ]),
     signOut() {
       this.signOutAction();
     }
-  }
+  },
+  mounted() {
+    this.authAction();
+  },
 }
 
 </script>

@@ -48,5 +48,15 @@ export const actions = {
     } catch (e) {
       commit('SET_ERROR', e.message)
     }
+  },
+
+  authAction({commit}) {
+      this.$firebase.auth.onAuthStateChanged(user => {
+        if (user) {
+          commit("SET_USER", {uid: user.uid, email: user.email});
+        } else {
+          commit("SET_USER", null);
+        }
+      });
   }
 }
