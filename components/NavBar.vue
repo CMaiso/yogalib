@@ -5,10 +5,10 @@
         <span class="font-semibold text-xl tracking-tight">YogaLib v2</span>
       </div>
       <ul class="text-sm lg:flex-grow">
-        <li class="block lg:inline-block text-teal-200 hover:text-white mr-4">
+        <li class="block lg:inline-block text-teal-200 hover:text-pink-700 mr-4">
           <nuxt-link exact to="/">Dashboard</nuxt-link>
         </li>
-        <li class="block lg:inline-block text-teal-200 hover:text-white mr-4">
+        <li class="block lg:inline-block text-teal-200 hover:text-pink-700 mr-4">
           <nuxt-link to="/register">S'enregistrer</nuxt-link>
         </li>
       </ul>

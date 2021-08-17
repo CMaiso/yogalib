@@ -16,10 +16,11 @@
         Se connecter
       </h2>
       <label class="mb-1">Email</label>
-      <input class="ring-1 ring-gray-300 w-full rounded-md px-4 py-2 outline-none mb-4" type="email" v-model="email"/>
+      <input class="placeholder-gray-600 bg-gray-100 border border-gray-100 focus:placeholder-gray-500 focus:bg-white focus:border-gray-500 w-full rounded-md px-4 py-2 outline-none mb-4" type="email"
+             v-model="email" placeholder="votremail@exemple.com"/>
       <label class="mb-1">Mot de passe</label>
-      <input class="ring-1 ring-gray-300 w-full rounded-md px-4 py-2 outline-none mb-4" type="password"
-             v-model="password"/>
+      <input class="placeholder-gray-600 bg-gray-100 border border-gray-100 focus:placeholder-gray-500 focus:bg-white focus:border-gray-500 w-full rounded-md px-4 py-2 outline-none mb-4" type="password"
+             v-model="password" placeholder="Votre mot de passe"/>
       <div class="flex items-center justify-between">
         <div class="flex items-center">
           <input id="remember-me" name="remember-me" type="checkbox"
