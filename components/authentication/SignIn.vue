@@ -1,5 +1,5 @@
 <template>
-  <section class="flex w-full min-h-screen justify-center items-center bg-gray-50 max-w-full">
+  <section class="flex w-full h-full justify-center items-center bg-gray-50">
     {{ getError }}
     <div v-if="validationErrors.length"
          class="">

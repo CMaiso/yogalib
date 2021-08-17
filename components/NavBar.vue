@@ -1,24 +1,27 @@
 <template>
   <header>
-    <nav>
-      <ul class="flex justify-center items-center">
-        <li class="ml-2">
+    <nav class="fixed flex items-center justify-between flex-wrap bg-white p-6 w-screen">
+      <div class="flex items-center flex-shrink-0 text-gray-700 mr-6">
+        <span class="font-semibold text-xl tracking-tight">YogaLib v2</span>
+      </div>
+      <ul class="text-sm lg:flex-grow">
+        <li class="block lg:inline-block text-teal-200 hover:text-white mr-4">
           <nuxt-link exact to="/">Dashboard</nuxt-link>
         </li>
-        <li class="ml-2">
+        <li class="block lg:inline-block text-teal-200 hover:text-white mr-4">
           <nuxt-link to="/register">S'enregistrer</nuxt-link>
         </li>
       </ul>
       <ul>
-        <li v-if="isUserAuth">Coucou {{ getUser.email }}</li>
-        <li>
+        <li class="lg:inline-block mr-4" v-if="isUserAuth">Bienvenue {{ getUser.email }}</li>
+        <li class="lg:inline-block">
           <button
-            class=""
+            class="rounded-md border border-pink-700 text-pink-600 bg-white hover:bg-pink-700 hover:text-white py-1 px-2"
             v-if="!isUserAuth">
             <nuxt-link to="/login">Se connecter</nuxt-link>
           </button>
           <button
-            class=""
+            class="rounded-md border border-pink-700 text-pink-600 bg-white hover:bg-pink-700 hover:text-white py-1 px-2"
             v-if="isUserAuth" @click="signOut">
             Déconnexion
           </button>
