@@ -39,6 +39,8 @@ export const actions = {
     } catch (e) {
       if (e.code === "auth/wrong-password") {
         commit('SET_ERROR', "Le mot de passe ne correspond pas.")
+      } else {
+        commit('SET_ERROR', e.message)
       }
       //TODO: Personalize all errors
     }
