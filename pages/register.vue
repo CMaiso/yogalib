@@ -9,13 +9,9 @@ import SignUp from '~/components/authentication/SignUp.vue';
 
 export default {
   components: {
-    SignUp
-  }
-}
-
-
+    SignUp,
+  },
+};
 </script>
 
-<style scoped>
-
-</style>
+<style scoped></style>

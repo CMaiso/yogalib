@@ -1,1 +1,6 @@
-export { sendMailInvitation, sendMailConfirmation, newUserSignUp, checkUserEmail } from './authentication';
+export {
+  sendMailInvitation,
+  sendMailConfirmation,
+  newUserSignUp,
+  checkUserEmail,
+} from './authentication';

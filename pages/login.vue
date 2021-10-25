@@ -1,5 +1,5 @@
 <template>
-    <SignIn />
+  <SignIn />
 </template>
 
 <script lang="ts">
@@ -7,13 +7,9 @@ import SignIn from '~/components/authentication/SignIn.vue';
 
 export default {
   components: {
-    SignIn
-  }
-}
-
-
+    SignIn,
+  },
+};
 </script>
 
-<style scoped>
-
-</style>
+<style scoped></style>

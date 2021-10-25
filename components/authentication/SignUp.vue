@@ -1,7 +1,6 @@
 <template>
   <section class="">
-    <div v-if="validationErrors.length"
-         class="">
+    <div v-if="validationErrors.length" class="">
       <ul style="">
         <li
           v-for="(error, index) in validationErrors"
@@ -29,11 +28,11 @@
       </label>
       <label>
         Nom
-        <input type="text" v-model="lastName"/>
+        <input type="text" v-model="lastName" />
       </label>
       <label>
         Téléphone
-        <input type="text" v-model="phone"/>
+        <input type="text" v-model="phone" />
       </label>
       <button type="submit">Créer son compte</button>
     </form>
@@ -41,28 +40,29 @@
 </template>
 
 <script>
-import { startCase } from "lodash";
-import { toLower } from "lodash";
+import { startCase } from 'lodash';
+import { toLower } from 'lodash';
 
 export default {
   name: `SignUp`,
   data() {
     return {
-      email: "",
-      password: "",
-      confirmPassword: "",
-      firstName: "",
-      lastName: "",
+      email: '',
+      password: '',
+      confirmPassword: '',
+      firstName: '',
+      lastName: '',
       phone: null,
-      validationErrors: []
-    }
+      validationErrors: [],
+    };
   },
   methods: {
     firstLetterCapitalize(name) {
       return startCase(toLower(name));
     },
     async newUserSignUp() {
-      const newUserSignUp = this.$firebase.functions.httpsCallable("newUserSignUp");
+      const newUserSignUp =
+        this.$firebase.functions.httpsCallable('newUserSignUp');
 
       await newUserSignUp({
         email: this.email.toLowerCase(),
@@ -73,7 +73,7 @@ export default {
       });
     },
     sendMailConfirmation() {
-      this.$firebase.functions().httpsCallable("sendMailConfirmation");
+      this.$firebase.functions().httpsCallable('sendMailConfirmation');
     },
     resetError() {
       this.validationErrors = [];
@@ -82,31 +82,33 @@ export default {
       this.resetError();
 
       if (!this.email) {
-        this.validationErrors.push("<strong>E-mail</strong> cannot be empty.");
+        this.validationErrors.push('<strong>E-mail</strong> cannot be empty.');
       }
       if (!this.password) {
-        this.validationErrors.push("<strong>Password</strong> cannot be empty");
+        this.validationErrors.push('<strong>Password</strong> cannot be empty');
       }
       if (!this.firstName) {
-        this.validationErrors.push("<strong>FirstName</strong> cannot be empty");
+        this.validationErrors.push(
+          '<strong>FirstName</strong> cannot be empty',
+        );
       }
       if (!this.lastName) {
-        this.validationErrors.push("<strong>LastName</strong> cannot be empty");
+        this.validationErrors.push('<strong>LastName</strong> cannot be empty');
       }
       if (!this.phone) {
-        this.validationErrors.push("<strong>Phone</strong> cannot be empty");
+        this.validationErrors.push('<strong>Phone</strong> cannot be empty');
       }
       if (this.password !== this.confirmPassword) {
-        this.validationErrors.push("<strong>Password</strong> cannot be different");
+        this.validationErrors.push(
+          '<strong>Password</strong> cannot be different',
+        );
       }
       if (this.validationErrors.length <= 0) {
         this.newUserSignUp();
       }
     },
   },
-  props: {
-  },
-  computed: {
-  },
-}
+  props: {},
+  computed: {},
+};
 </script>

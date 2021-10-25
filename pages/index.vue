@@ -1,12 +1,8 @@
 <template>
-  <div class="container">
-    Je suis une super home
-  </div>
+  <div class="container">Je suis une super home</div>
 </template>
 
-<script lang="ts">
-
-</script>
+<script lang="ts"></script>
 
 <style>
 /* Sample `apply` at-rules with Tailwind CSS
@@ -24,16 +20,8 @@
 }
 
 .title {
-  font-family:
-    'Quicksand',
-    'Source Sans Pro',
-    -apple-system,
-    BlinkMacSystemFont,
-    'Segoe UI',
-    Roboto,
-    'Helvetica Neue',
-    Arial,
-    sans-serif;
+  font-family: 'Quicksand', 'Source Sans Pro', -apple-system, BlinkMacSystemFont,
+    'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
   display: block;
   font-weight: 300;
   font-size: 100px;
