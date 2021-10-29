@@ -150,7 +150,7 @@ export default {
     validate() {
       this.resetError();
       // TODO: Find a better way to display errors with blur ?
-      if (this.$v.user.email.error) {
+      if (this.$v.user.email.$error) {
         this.validationErrors.push('<strong>E-mail</strong> is incorrect.');
       }
       if (!this.$v.user.email.required) {
@@ -158,6 +158,9 @@ export default {
       }
       if (!this.$v.user.password.required) {
         this.validationErrors.push('<strong>Password</strong> cannot be empty');
+      }
+      if (this.$v.user.password.$error) {
+        this.validationErrors.push('<strong>Password</strong> is incorrect.');
       }
       if (this.validationErrors.length <= 0) {
         this.onSubmit();
