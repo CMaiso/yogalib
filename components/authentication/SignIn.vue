@@ -144,8 +144,14 @@ export default {
   },
   methods: {
     ...mapActions(['signInAction']),
+    invalidField(field) {
+      return field.$error;
+    },
     onSubmit() {
-      this.signInAction({ email: this.email, password: this.password });
+      this.signInAction({
+        email: this.user.email,
+        password: this.user.password,
+      });
     },
     validate() {
       this.resetError();
