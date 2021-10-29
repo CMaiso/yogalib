@@ -1,9 +1,18 @@
 <template>
   <section class="flex w-full h-full justify-center items-center bg-gray-50">
     {{ getError }}
+    <div v-if="validationErrors.length" class="">
+      <ul style="">
+        <li
+          v-for="(error, index) in validationErrors"
+          :key="`error-${index}`"
+          v-html="error"
+        />
+      </ul>
+    </div>
     <form
       class="text-left bg-white rounded-xl shadow-lg p-8 flex flex-col"
-      @submit.prevent="onSubmit()"
+      @submit.prevent="validate()"
     >
       <h2 class="text-center text-3xl font-extrabold text-pink-700 mb-8">
         Se connecter
@@ -22,8 +31,7 @@
           outline-none
           mb-4
         "
-        type="email"
-        v-model="$v.email.$model"
+        v-model="$v.user.email.$model"
         placeholder="votremail@exemple.com"
       />
       <label class="mb-1">Mot de passe</label>
@@ -41,7 +49,7 @@
           mb-4
         "
         type="password"
-        v-model="$v.password.$model"
+        v-model="$v.user.password.$model"
         placeholder="Votre mot de passe"
       />
       <div class="flex items-center justify-between">
@@ -106,24 +114,57 @@
 
 <script>
 import { mapActions, mapGetters } from 'vuex';
-import { required, minLength } from 'vuelidate/lib/validators';
+import {
+  required,
+  minLength,
+  maxLength,
+  email,
+} from 'vuelidate/lib/validators';
 
 export default {
   name: `SignIn`,
   data() {
     return {
-      email: '',
-      password: '',
+      user: {
+        email: '',
+        password: '',
+      },
+      validationErrors: [],
     };
   },
   validations: {
-    email: { required, minLength: minLength(4) },
-    password: { required, minLength: minLength(4) },
+    user: {
+      email: { required, email, maxLength: maxLength(500) },
+      password: {
+        required,
+        minLength: minLength(6),
+        maxLength: maxLength(255),
+      },
+    },
   },
   methods: {
     ...mapActions(['signInAction']),
     onSubmit() {
       this.signInAction({ email: this.email, password: this.password });
+    },
+    validate() {
+      this.resetError();
+      // TODO: Find a better way to display errors with blur ?
+      if (this.$v.user.email.error) {
+        this.validationErrors.push('<strong>E-mail</strong> is incorrect.');
+      }
+      if (!this.$v.user.email.required) {
+        this.validationErrors.push('<strong>E-mail</strong> is required.');
+      }
+      if (!this.$v.user.password.required) {
+        this.validationErrors.push('<strong>Password</strong> cannot be empty');
+      }
+      if (this.validationErrors.length <= 0) {
+        this.onSubmit();
+      }
+    },
+    resetError() {
+      this.validationErrors = [];
     },
   },
   props: {},
