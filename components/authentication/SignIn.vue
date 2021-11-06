@@ -1,15 +1,6 @@
 <template>
   <section class="flex w-full h-full justify-center items-center bg-gray-50">
-    {{ getError }}
-    <div v-if="validationErrors.length" class="">
-      <ul style="">
-        <li
-          v-for="(error, index) in validationErrors"
-          :key="`error-${index}`"
-          v-html="error"
-        />
-      </ul>
-    </div>
+    <div>{{ getError }}</div>
     <form
       class="text-left bg-white rounded-xl shadow-lg p-8 flex flex-col"
       @submit.prevent="validate()"
@@ -34,6 +25,7 @@
         v-model="$v.user.email.$model"
         placeholder="votremail@exemple.com"
       />
+      <p v-if="validationErrors.email">{{ validationErrors.email }}</p>
       <label class="mb-1">Mot de passe</label>
       <input
         class="
@@ -52,6 +44,9 @@
         v-model="$v.user.password.$model"
         placeholder="Votre mot de passe"
       />
+      <p v-if="validationErrors.password">
+        {{ validationErrors.password }}
+      </p>
       <div class="flex items-center justify-between">
         <div class="flex items-center">
           <input
@@ -114,12 +109,7 @@
 
 <script>
 import { mapActions, mapGetters } from 'vuex';
-import {
-  required,
-  minLength,
-  maxLength,
-  email,
-} from 'vuelidate/lib/validators';
+import { required, maxLength, email } from 'vuelidate/lib/validators';
 
 export default {
   name: `SignIn`,
@@ -129,7 +119,7 @@ export default {
         email: '',
         password: '',
       },
-      validationErrors: [],
+      validationErrors: {},
     };
   },
   validations: {
@@ -137,16 +127,11 @@ export default {
       email: { required, email, maxLength: maxLength(500) },
       password: {
         required,
-        minLength: minLength(6),
-        maxLength: maxLength(255),
       },
     },
   },
   methods: {
     ...mapActions(['signInAction']),
-    invalidField(field) {
-      return field.$error;
-    },
     onSubmit() {
       this.signInAction({
         email: this.user.email,
@@ -157,28 +142,31 @@ export default {
       this.resetError();
       // TODO: Find a better way to display errors with blur ?
       if (this.$v.user.email.$error) {
-        this.validationErrors.push('<strong>E-mail</strong> is incorrect.');
+        this.validationErrors.email = 'Email is invalid';
       }
       if (!this.$v.user.email.required) {
-        this.validationErrors.push('<strong>E-mail</strong> is required.');
+        this.validationErrors.email = 'Email is required';
       }
       if (!this.$v.user.password.required) {
-        this.validationErrors.push('<strong>Password</strong> cannot be empty');
-      }
-      if (this.$v.user.password.$error) {
-        this.validationErrors.push('<strong>Password</strong> is incorrect.');
+        this.validationErrors.password = 'Password cannot be empty';
       }
       if (this.validationErrors.length <= 0) {
         this.onSubmit();
       }
     },
     resetError() {
-      this.validationErrors = [];
+      this.validationErrors = {};
     },
   },
   props: {},
   computed: {
     ...mapGetters(['getUser', 'isUserAuth', 'getError']),
+    invalidField(field) {
+      return field.$error;
+    },
+    hasErrors() {
+      return this.validationErrors;
+    },
   },
 };
 </script>
