@@ -3,7 +3,7 @@
     <div>{{ getError }}</div>
     <form
       class="text-left bg-white rounded-xl shadow-lg p-8 flex flex-col"
-      @submit.prevent="validate()"
+      @submit.prevent="onSubmit()"
     >
       <h2 class="text-center text-3xl font-extrabold text-pink-700 mb-8">
         Se connecter
@@ -22,8 +22,13 @@
           outline-none
           mb-4
         "
+        :class="
+          this.invalidField($v.user.email)
+            ? 'border-red-500'
+            : 'border border-gray-100'
+        "
+        @blur="validate"
         v-model="$v.user.email.$model"
-        placeholder="votremail@exemple.com"
       />
       <p v-if="validationErrors.email">{{ validationErrors.email }}</p>
       <label class="mb-1">Mot de passe</label>
@@ -31,7 +36,6 @@
         class="
           placeholder-gray-600
           bg-gray-100
-          border border-gray-100
           focus:placeholder-gray-500 focus:bg-white focus:border-gray-500
           w-full
           rounded-md
@@ -40,9 +44,14 @@
           outline-none
           mb-4
         "
+        :class="
+          this.invalidField($v.user.password)
+            ? 'border-red-500'
+            : 'border border-gray-100'
+        "
         type="password"
         v-model="$v.user.password.$model"
-        placeholder="Votre mot de passe"
+        @blur="validate"
       />
       <p v-if="validationErrors.password">
         {{ validationErrors.password }}
@@ -88,18 +97,11 @@
           font-medium
           rounded-md
           text-white
-          bg-pink-600
-          hover:bg-pink-700
           focus:outline-none
-          focus:ring-2
-          focus:ring-offset-2
-          focus:ring-indigo-500
           mt-4
         "
         type="submit"
-        :class="{
-          disabled: '',
-        }"
+        :class="hasErrors ? 'bg-pink-200' : 'bg-pink-600 hover:bg-pink-700'"
       >
         Se connecter
       </button>
@@ -133,6 +135,7 @@ export default {
   methods: {
     ...mapActions(['signInAction']),
     onSubmit() {
+      if (this.hasErrors) return; // doesn't work
       this.signInAction({
         email: this.user.email,
         password: this.user.password,
@@ -140,7 +143,6 @@ export default {
     },
     validate() {
       this.resetError();
-      // TODO: Find a better way to display errors with blur ?
       if (this.$v.user.email.$error) {
         this.validationErrors.email = 'Email is invalid';
       }
@@ -150,20 +152,17 @@ export default {
       if (!this.$v.user.password.required) {
         this.validationErrors.password = 'Password cannot be empty';
       }
-      if (this.validationErrors.length <= 0) {
-        this.onSubmit();
-      }
     },
     resetError() {
       this.validationErrors = {};
+    },
+    invalidField(field) {
+      return field.$error;
     },
   },
   props: {},
   computed: {
     ...mapGetters(['getUser', 'isUserAuth', 'getError']),
-    invalidField(field) {
-      return field.$error;
-    },
     hasErrors() {
       return this.validationErrors;
     },
