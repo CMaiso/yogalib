@@ -44,7 +44,7 @@
             "
             v-if="!isUserAuth"
           >
-            <nuxt-link to="/login">Se connecter</nuxt-link>
+            <nuxt-link to="/account/login">Se connecter</nuxt-link>
           </button>
           <button
             class="
