@@ -109,7 +109,7 @@
   </section>
 </template>
 
-<script>
+<script lang="ts">
 import { mapActions, mapGetters } from 'vuex';
 import { required, maxLength, email } from 'vuelidate/lib/validators';
 
@@ -134,14 +134,14 @@ export default {
   },
   methods: {
     ...mapActions(['signInAction']),
-    onSubmit() {
+    onSubmit(): void {
       if (this.hasErrors) return; // doesn't work
       this.signInAction({
         email: this.user.email,
         password: this.user.password,
       });
     },
-    validate() {
+    validate(): void {
       this.resetError();
       if (this.$v.user.email.$error) {
         this.validationErrors.email = 'Email is invalid';
@@ -153,17 +153,17 @@ export default {
         this.validationErrors.password = 'Password cannot be empty';
       }
     },
-    resetError() {
+    resetError(): void {
       this.validationErrors = {};
     },
-    invalidField(field) {
+    invalidField(field: object): object {
       return field.$error;
     },
   },
   props: {},
   computed: {
     ...mapGetters(['getUser', 'isUserAuth', 'getError']),
-    hasErrors() {
+    hasErrors(): object {
       return this.validationErrors;
     },
   },
