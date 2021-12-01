@@ -5,7 +5,7 @@
       class="text-left bg-white rounded-xl shadow-lg p-8 flex flex-col"
       @submit.prevent="onSubmit()"
     >
-      <h2 class="text-center text-3xl font-title text-pink-700 mb-8">
+      <h2 class="text-center text-3xl font-title font-semibold text-pink-700 mb-8">
         Se connecter
       </h2>
       <label class="mb-1">Email</label>

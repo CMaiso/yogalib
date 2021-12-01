@@ -2,6 +2,10 @@
   purge: [],
   darkMode: false, // or 'media' or 'class'
   theme: {
+    fontFamily: {
+      body: ["Open Sans"],
+      title: ["Poppins"]
+    },
     extend: {
       colors: {
         primary: '#F5A04E',
