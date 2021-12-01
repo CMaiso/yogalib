@@ -5,7 +5,7 @@
       class="text-left bg-white rounded-xl shadow-lg p-8 flex flex-col"
       @submit.prevent="onSubmit()"
     >
-      <h2 class="text-center text-3xl font-extrabold text-pink-700 mb-8">
+      <h2 class="text-center text-3xl font-title text-pink-700 mb-8">
         Se connecter
       </h2>
       <label class="mb-1">Email</label>
@@ -101,7 +101,7 @@
           mt-4
         "
         type="submit"
-        :class="hasErrors ? 'bg-pink-200' : 'bg-pink-600 hover:bg-pink-700'"
+        :class="hasErrors ? 'bg-yellow-100' : 'bg-primary hover:bg-secondary'"
       >
         Se connecter
       </button>
