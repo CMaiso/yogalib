@@ -112,16 +112,17 @@
 <script lang="ts">
 import { mapActions, mapGetters } from 'vuex';
 import { required, maxLength, email } from 'vuelidate/lib/validators';
+import { defineComponent } from '@nuxtjs/composition-api';
 
-export default {
+export default defineComponent({
   name: `SignIn`,
   data() {
     return {
       user: {
-        email: '',
-        password: '',
+        email: '' as String,
+        password: '' as String,
       },
-      validationErrors: {},
+      validationErrors: {} as Object,
     };
   },
   validations: {
@@ -135,7 +136,7 @@ export default {
   methods: {
     ...mapActions(['signInAction']),
     onSubmit(): void {
-      if (this.hasErrors) return; // doesn't work
+      if (this.hasErrors) return;
       this.signInAction({
         email: this.user.email,
         password: this.user.password,
@@ -160,12 +161,11 @@ export default {
       return field.$error;
     },
   },
-  props: {},
   computed: {
     ...mapGetters(['getUser', 'isUserAuth', 'getError']),
-    hasErrors(): object {
-      return this.validationErrors;
+    hasErrors(): object | null {
+      return this.validationErrors === {} ? this.validationErrors : null;
     },
   },
-};
+});
 </script>
