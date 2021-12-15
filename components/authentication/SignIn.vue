@@ -5,57 +5,26 @@
       class="text-left bg-white rounded-xl shadow-lg p-8 flex flex-col"
       @submit.prevent="onSubmit()"
     >
-      <h2 class="text-center text-3xl font-title font-semibold text-pink-700 mb-8">
+      <h2
+        class="text-center text-3xl font-title font-semibold text-pink-700 mb-8"
+      >
         Se connecter
       </h2>
-      <label class="mb-1">Email</label>
-      <input
-        class="
-          placeholder-gray-600
-          bg-gray-100
-          border border-gray-100
-          focus:placeholder-gray-500 focus:bg-white focus:border-gray-500
-          w-full
-          rounded-md
-          px-4
-          py-2
-          outline-none
-          mb-4
-        "
-        :class="
-          this.invalidField($v.user.email)
-            ? 'border-red-500'
-            : 'border border-gray-100'
-        "
-        @blur="validate"
-        v-model="$v.user.email.$model"
+      <FormInput
+        label="Email"
+        @validate="validate()"
+        :error="validationErrors.email"
+        v-model="user.email"
+        :v="$v.user.email"
       />
-      <p v-if="validationErrors.email">{{ validationErrors.email }}</p>
-      <label class="mb-1">Mot de passe</label>
-      <input
-        class="
-          placeholder-gray-600
-          bg-gray-100
-          focus:placeholder-gray-500 focus:bg-white focus:border-gray-500
-          w-full
-          rounded-md
-          px-4
-          py-2
-          outline-none
-          mb-4
-        "
-        :class="
-          this.invalidField($v.user.password)
-            ? 'border-red-500'
-            : 'border border-gray-100'
-        "
-        type="password"
-        v-model="$v.user.password.$model"
-        @blur="validate"
+      <FormInput
+        label="Mot de passe"
+        @validate="validate()"
+        :error="validationErrors.password"
+        :v="$v.user.password"
+        v-model="user.password"
       />
-      <p v-if="validationErrors.password">
-        {{ validationErrors.password }}
-      </p>
+
       <div class="flex items-center justify-between">
         <div class="flex items-center">
           <input
@@ -113,9 +82,11 @@
 import { mapActions, mapGetters } from 'vuex';
 import { required, maxLength, email } from 'vuelidate/lib/validators';
 import { defineComponent } from '@nuxtjs/composition-api';
+import FormInput from '~/components/form/input';
 
 export default defineComponent({
   name: `SignIn`,
+  components: { FormInput },
   data() {
     return {
       user: {
@@ -156,9 +127,6 @@ export default defineComponent({
     },
     resetError(): void {
       this.validationErrors = {};
-    },
-    invalidField(field: object): object {
-      return field.$error;
     },
   },
   computed: {
