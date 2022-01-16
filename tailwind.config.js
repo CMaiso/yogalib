@@ -1,12 +1,12 @@
- module.exports = {
+module.exports = {
   purge: [],
   darkMode: false, // or 'media' or 'class'
   theme: {
-    fontFamily: {
-      body: ["Open Sans"],
-      title: ["Poppins"]
-    },
     extend: {
+      fontFamily: {
+        body: ['Open Sans', 'sans-serif'],
+        title: ['Poppins', 'sans-serif'],
+      },
       colors: {
         primary: '#F5A04E',
         secondary: '#EE6C4D',

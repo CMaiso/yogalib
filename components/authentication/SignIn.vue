@@ -2,24 +2,31 @@
   <section class="flex w-full h-full justify-center items-center bg-gray-50">
     <div>{{ getError }}</div>
     <form
-      class="text-left bg-white rounded-xl shadow-lg p-8 flex flex-col"
+      class="
+        text-left
+        bg-white
+        rounded-xl
+        shadow-lg
+        p-8
+        flex flex-col
+        text-body
+      "
       @submit.prevent="onSubmit()"
     >
-      <h2
-        class="text-center text-3xl font-title font-semibold text-pink-700 mb-8"
-      >
-        Se connecter
+      <h2 class="text-3xl font-title font-extrabold text-secondary mb-2">
+        Welcome back !
       </h2>
+      <p class="mb-6 font-semibold">Connectez-vous à votre compte</p>
       <FormInput
         label="Email"
-        @validate="validate()"
+        @validate="validateEmail()"
         :error="validationErrors.email"
         v-model="user.email"
         :v="$v.user.email"
       />
       <FormInput
         label="Mot de passe"
-        @validate="validate()"
+        @validate="validatePassword()"
         :error="validationErrors.password"
         :v="$v.user.password"
         v-model="user.password"
@@ -49,7 +56,7 @@
         </div>
 
         <div class="text-sm">
-          <a href="#" class="font-medium text-pink-700 hover:text-pink-500">
+          <a href="#" class="font-medium text-secondary hover:text-primary">
             Mot de passe oublié ?
           </a>
         </div>
@@ -93,7 +100,7 @@ export default defineComponent({
         email: '' as String,
         password: '' as String,
       },
-      validationErrors: {} as Object,
+      validationErrors: { email: '', password: '' } as Object,
     };
   },
   validations: {
@@ -113,26 +120,26 @@ export default defineComponent({
         password: this.user.password,
       });
     },
-    validate(): void {
-      this.resetError();
+    validateEmail(): void {
+      this.validationErrors = { ...this.validationErrors, email: '' }; //reset email errors
       if (this.$v.user.email.$error) {
         this.validationErrors.email = 'Email is invalid';
       }
       if (!this.$v.user.email.required) {
         this.validationErrors.email = 'Email is required';
       }
+    },
+    validatePassword(): void {
+      this.validationErrors = { ...this.validationErrors, password: '' }; //reset password errors
       if (!this.$v.user.password.required) {
         this.validationErrors.password = 'Password cannot be empty';
       }
-    },
-    resetError(): void {
-      this.validationErrors = {};
     },
   },
   computed: {
     ...mapGetters(['getUser', 'isUserAuth', 'getError']),
     hasErrors(): object | null {
-      return this.validationErrors === {} ? this.validationErrors : null;
+      return this.validationErrors === {} && this.validationErrors;
     },
   },
 });

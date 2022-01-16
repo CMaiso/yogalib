@@ -14,7 +14,9 @@
         outline-none
         mb-4
       "
-      :class="this.invalidField() ? 'border-red-500' : 'border border-gray-100'"
+      :class="
+        this.invalidField() ? 'border-secondary' : 'border border-gray-100'
+      "
       @blur="$emit('validate')"
       @input="onInput"
       :value="value"
@@ -42,8 +44,8 @@ export default defineComponent({
     },
   },
   methods: {
-    invalidField(field = {}): object {
-      return field.$error;
+    invalidField(): object {
+      return this.v.$invalid;
     },
     onInput(event) {
       this.v.$touch();
