@@ -29,7 +29,7 @@
       </ul>
       <ul>
         <li class="lg:inline-block mr-4" v-if="isUserAuth">
-          Bienvenue {{ getUser.email }}
+          Bienvenue {{ user.email }}
         </li>
         <li class="lg:inline-block">
           <button
@@ -68,21 +68,25 @@
 </template>
 
 <script>
-import { mapActions, mapGetters } from 'vuex';
 
 export default {
   name: 'NavBar',
   computed: {
-    ...mapGetters(['getUser', 'isUserAuth']),
-  },
-  methods: {
-    ...mapActions(['signOutAction', 'authAction']),
-    signOut() {
-      this.signOutAction();
+    user() {
+      return this.$store.getters['authentication/getUser'];
+    },
+    isUserAuth() {
+      return this.$store.getters['authentication/isUserAuth'];
     },
   },
+  methods: {
+    signOut() {
+      this.$store.dispatch('authentication/signOutAction')
+    },
+
+  },
   mounted() {
-    this.authAction();
+    this.$store.dispatch('authentication/authAction')
   },
 };
 </script>

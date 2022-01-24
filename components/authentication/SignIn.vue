@@ -1,6 +1,6 @@
 <template>
   <section class="flex w-full h-full justify-center items-center bg-gray-50">
-    <div>{{ getError }}</div>
+    <div>{{ error }}</div>
     <form
       class="
         text-left
@@ -86,7 +86,6 @@
 </template>
 
 <script lang="ts">
-import { mapActions, mapGetters } from 'vuex';
 import { required, maxLength, email } from 'vuelidate/lib/validators';
 import { defineComponent } from '@nuxtjs/composition-api';
 import FormInput from '~/components/form/input';
@@ -112,13 +111,12 @@ export default defineComponent({
     },
   },
   methods: {
-    ...mapActions(['signInAction']),
     onSubmit(): void {
       if (this.hasErrors) return;
-      this.signInAction({
+      this.$store.dispatch('authentication/signInAction', {
         email: this.user.email,
         password: this.user.password,
-      });
+      })
     },
     validateEmail(): void {
       this.validationErrors = { ...this.validationErrors, email: '' }; //reset email errors
@@ -130,15 +128,24 @@ export default defineComponent({
       }
     },
     validatePassword(): void {
-      this.validationErrors = { ...this.validationErrors, password: '' }; //reset password errors
+      this.validationErrors = {...this.validationErrors, password: ''}; //reset password errors
       if (!this.$v.user.password.required) {
         this.validationErrors.password = 'Password cannot be empty';
       }
-    },
+    }
   },
   computed: {
-    ...mapGetters(['getUser', 'isUserAuth', 'getError']),
+    getUser() {
+      return this.$store.getters['authentication/getUser'];
+    },
+    isUserAuth() {
+      return this.$store.getters['authentication/isUserAuth'];
+    },
+    error() {
+      return this.$store.getters['authentication/getError'];
+    },
     hasErrors(): object | null {
+      console.log(this.$store);
       return this.validationErrors === {} && this.validationErrors;
     },
   },
