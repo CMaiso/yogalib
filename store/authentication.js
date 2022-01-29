@@ -10,16 +10,20 @@ export const mutations = {
   SET_ERROR(state, error) {
     state.error = error;
   },
+  UPDATE_USER(state, userInformation) {
+    state.authUser = { ... state.authUser, ...userInformation };
+  }
 };
 
 export const actions = {
-  async signInAction({ commit }, { email, password }) {
+  async signInAction({ commit, dispatch }, { email, password }) {
     try {
       const { user } = await this.$firebase.auth.signInWithEmailAndPassword(
         email,
         password,
       );
       commit('SET_USER', { uid: user.uid, email: user.email });
+      dispatch('fetchUserData', { uid: user.uid });
     } catch (e) {
       if (e.code === 'auth/wrong-password') {
         commit('SET_ERROR', 'Le mot de passe ne correspond pas.');
@@ -49,8 +53,16 @@ export const actions = {
     });
   },
 
-  // fetchAuthUser({commit}) {
-  // }
+  async fetchUserData({ commit, state }, { uid }) {
+    try {
+      const collection = await this.$firebase.db.collection('users').doc(uid).get();
+      const userInformation = await collection.data();
+      commit('UPDATE_USER', userInformation);
+    }
+    catch (e) {
+      commit('SET_ERROR', e.message);
+    }
+  }
 };
 
 export const getters = {
