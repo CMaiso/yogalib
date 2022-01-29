@@ -17,6 +17,7 @@
       :class="
         this.invalidField() ? 'border-secondary' : 'border border-gray-100'
       "
+      :type="this.password ? 'password' : 'text'"
       @blur="$emit('validate')"
       @input="onInput"
       :value="value"
@@ -42,10 +43,11 @@ export default defineComponent({
       type: Object,
       required: true,
     },
+    password: { type: Boolean, default: false },
   },
   methods: {
     invalidField(): object {
-      return this.v.$invalid;
+      return this.error;
     },
     onInput(event) {
       this.v.$touch();

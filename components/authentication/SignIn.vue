@@ -26,6 +26,7 @@
       />
       <FormInput
         label="Mot de passe"
+        password
         @validate="validatePassword()"
         :error="validationErrors.password"
         :v="$v.user.password"
@@ -116,7 +117,7 @@ export default defineComponent({
       this.$store.dispatch('authentication/signInAction', {
         email: this.user.email,
         password: this.user.password,
-      })
+      });
     },
     validateEmail(): void {
       this.validationErrors = { ...this.validationErrors, email: '' }; //reset email errors
@@ -128,11 +129,11 @@ export default defineComponent({
       }
     },
     validatePassword(): void {
-      this.validationErrors = {...this.validationErrors, password: ''}; //reset password errors
+      this.validationErrors = { ...this.validationErrors, password: '' }; //reset password errors
       if (!this.$v.user.password.required) {
         this.validationErrors.password = 'Password cannot be empty';
       }
-    }
+    },
   },
   computed: {
     getUser() {
@@ -144,9 +145,9 @@ export default defineComponent({
     error() {
       return this.$store.getters['authentication/getError'];
     },
-    hasErrors(): object | null {
-      console.log(this.$store);
-      return this.validationErrors === {} && this.validationErrors;
+    hasErrors() {
+      //TODO : Why $v is not update when we have errors ?
+      return this.$v.user.anyError;
     },
   },
 });
