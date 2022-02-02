@@ -3,16 +3,16 @@
     <label class="mb-1">{{ label }}</label>
     <input
       class="
-        placeholder-gray-600
-        bg-gray-100
-        border border-gray-100
-        focus:placeholder-gray-500 focus:bg-white focus:border-gray-500
-        w-full
-        rounded-md
-        px-4
-        py-2
         outline-none
         mb-4
+        w-full
+        rounded-md
+        border border-gray-100
+        bg-gray-100
+        px-4
+        py-2
+        placeholder-gray-600
+        focus:border-gray-500 focus:bg-white focus:placeholder-gray-500
       "
       :class="
         this.invalidField() ? 'border-secondary' : 'border border-gray-100'

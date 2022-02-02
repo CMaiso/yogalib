@@ -4,31 +4,31 @@
       class="
         fixed
         flex
+        w-screen
+        flex-wrap
         items-center
         justify-between
-        flex-wrap
         bg-white
         p-6
-        w-screen
       "
     >
-      <div class="flex items-center flex-shrink-0 text-gray-700 mr-6">
-        <span class="font-semibold text-xl tracking-tight">YogaLib v2</span>
+      <div class="mr-6 flex flex-shrink-0 items-center text-gray-700">
+        <span class="text-xl font-semibold tracking-tight">YogaLib v2</span>
       </div>
       <ul class="text-sm lg:flex-grow">
         <li
-          class="block lg:inline-block text-teal-200 hover:text-pink-700 mr-4"
+          class="text-teal-200 mr-4 block hover:text-pink-700 lg:inline-block"
         >
           <nuxt-link exact to="/">Dashboard</nuxt-link>
         </li>
         <li
-          class="block lg:inline-block text-teal-200 hover:text-pink-700 mr-4"
+          class="text-teal-200 mr-4 block hover:text-pink-700 lg:inline-block"
         >
           <nuxt-link to="/register">S'enregistrer</nuxt-link>
         </li>
       </ul>
       <ul>
-        <li class="lg:inline-block mr-4" v-if="isUserAuth">
+        <li class="mr-4 lg:inline-block" v-if="isUserAuth">
           Bienvenue {{ user.email }}
         </li>
         <li class="lg:inline-block">
@@ -36,11 +36,11 @@
             class="
               rounded-md
               border border-pink-700
-              text-pink-600
               bg-white
-              hover:bg-pink-700 hover:text-white
               py-1
               px-2
+              text-pink-600
+              hover:bg-pink-700 hover:text-white
             "
             v-if="!isUserAuth"
           >
@@ -50,11 +50,11 @@
             class="
               rounded-md
               border border-pink-700
-              text-pink-600
               bg-white
-              hover:bg-pink-700 hover:text-white
               py-1
               px-2
+              text-pink-600
+              hover:bg-pink-700 hover:text-white
             "
             v-if="isUserAuth"
             @click="signOut"
@@ -68,7 +68,6 @@
 </template>
 
 <script>
-
 export default {
   name: 'NavBar',
   computed: {
@@ -81,12 +80,11 @@ export default {
   },
   methods: {
     signOut() {
-      this.$store.dispatch('authentication/signOutAction')
+      this.$store.dispatch('authentication/signOutAction');
     },
-
   },
   mounted() {
-    this.$store.dispatch('authentication/authAction')
+    this.$store.dispatch('authentication/authAction');
   },
 };
 </script>

@@ -12,21 +12,22 @@
   "dependencies": {
     "@nuxtjs/composition-api": "^0.30.0",
     "core-js": "^3.9.1",
-    "firebase": "^8.7.1",
+    "firebase": "^9.6.5",
     "lodash": "^4.17.21",
     "nuxt": "^2.15.3",
     "vuefire": "^2.2.5",
     "vuelidate": "^0.7.6"
   },
   "devDependencies": {
-    "@nuxtjs/dotenv": "^1.4.1",
     "@nuxt/types": "^2.15.3",
     "@nuxt/typescript-build": "^2.1.0",
+    "@nuxtjs/dotenv": "^1.4.1",
     "@nuxtjs/eslint-config-typescript": "^7.0.2",
     "@nuxtjs/tailwindcss": "^4.0.1",
     "@types/vuelidate": "^0.7.15",
     "postcss": "^8.2.8",
     "prettier": "2.4.1",
+    "prettier-plugin-tailwindcss": "^0.1.4",
     "vuex": "^3.6.2"
   }
 }
