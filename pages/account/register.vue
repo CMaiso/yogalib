@@ -1,15 +1,15 @@
 <template>
   <div class="container">
-    <SignUp />
+    <FormWizard />
   </div>
 </template>
 
 <script lang="ts">
-import SignUp from '~/components/authentication/SignUp.vue';
+import FormWizard from '~/components/authentication/signUpMultiForm/FormWizard';
 
 export default {
   components: {
-    SignUp,
+    FormWizard,
   },
 };
 </script>
