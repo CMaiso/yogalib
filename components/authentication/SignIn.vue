@@ -1,19 +1,19 @@
 <template>
-  <section class="flex w-full h-full justify-center items-center bg-gray-50">
+  <section class="flex h-full w-full items-center justify-center bg-gray-50">
     <div>{{ error }}</div>
     <form
       class="
-        text-left
-        bg-white
-        rounded-xl
-        shadow-lg
-        p-8
-        flex flex-col
         text-body
+        flex flex-col
+        rounded-xl
+        bg-white
+        p-8
+        text-left
+        shadow-lg
       "
       @submit.prevent="onSubmit()"
     >
-      <h2 class="text-3xl font-title font-extrabold text-secondary mb-2">
+      <h2 class="mb-2 font-title text-3xl font-extrabold text-secondary">
         Welcome back !
       </h2>
       <p class="mb-6 font-semibold">Connectez-vous à votre compte</p>
@@ -42,10 +42,10 @@
             class="
               h-4
               w-4
+              rounded
+              border-gray-300
               text-indigo-600
               focus:ring-indigo-500
-              border-gray-300
-              rounded
             "
           />
           <label
@@ -64,21 +64,21 @@
       </div>
       <button
         class="
-          w-full
-          flex
-          justify-center
-          py-2
-          px-4
-          border border-transparent
-          text-sm
-          font-medium
-          rounded-md
-          text-white
           focus:outline-none
           mt-4
+          flex
+          w-full
+          justify-center
+          rounded-md
+          border border-transparent
+          py-2
+          px-4
+          text-sm
+          font-medium
+          text-white
         "
         type="submit"
-        :class="hasErrors ? 'bg-yellow-100' : 'bg-primary hover:bg-secondary'"
+        :class="hasErrors ? 'bg-yellow-200' : 'bg-primary hover:bg-secondary'"
       >
         Se connecter
       </button>
@@ -146,8 +146,7 @@ export default defineComponent({
       return this.$store.getters['authentication/getError'];
     },
     hasErrors() {
-      //TODO : Why $v is not update when we have errors ?
-      return this.$v.user.anyError;
+      return this.$v.user.$invalid;
     },
   },
 });
