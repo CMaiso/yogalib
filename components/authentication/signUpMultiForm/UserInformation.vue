@@ -125,6 +125,7 @@ export default defineComponent({
   methods: {
     onSubmit() {
       if (this.hasErrors) return;
+      //TODO: add Firebase call for create the account
     },
     //TODO: refactor validate functions (too much functions for one thing :( )
     validateEmail() {
