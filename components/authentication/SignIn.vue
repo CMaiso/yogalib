@@ -1,5 +1,5 @@
 <template>
-  <section class="flex h-full w-full items-center justify-center bg-gray-50">
+  <section class="flex items-center justify-center sm:h-screen sm:w-screen">
     <div>{{ error }}</div>
     <form
       class="

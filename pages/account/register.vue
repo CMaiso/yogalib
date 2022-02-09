@@ -1,5 +1,5 @@
 <template>
-  <div class="container">
+  <div class="flex w-full items-center justify-center">
     <FormWizard />
   </div>
 </template>
