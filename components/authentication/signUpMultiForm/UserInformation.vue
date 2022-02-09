@@ -15,7 +15,7 @@
     />
     <FormInput
       label="Mot de passe"
-      password
+      type="password"
       @validate="validatePassword()"
       :error="validationErrors.password"
       :v="$v.user.password"
@@ -23,7 +23,7 @@
     />
     <FormInput
       label="Confirmation Mot de passe"
-      password
+      type="password"
       @validate="validatePasswordConfirmation()"
       :error="validationErrors.passwordConfirmation"
       :v="$v.user.passwordConfirmation"
@@ -38,13 +38,14 @@
     />
     <FormInput
       label="Nom"
-      @validate="validateFirstName()"
+      @validate="validateLastName()"
       :error="validationErrors.lastName"
       :v="$v.user.lastName"
       v-model="user.lastName"
     />
     <FormInput
       label="Numéro de téléphone"
+      type="tel"
       @validate="validatePhoneNumber()"
       :error="validationErrors.phoneNumber"
       :v="$v.user.phoneNumber"
@@ -77,7 +78,13 @@
 <script lang="ts">
 import FormInput from '@/components/form/input';
 import { defineComponent } from '@nuxtjs/composition-api';
-import { email, maxLength, required } from 'vuelidate/lib/validators';
+import {
+  email,
+  minLength,
+  maxLength,
+  required,
+  sameAs,
+} from 'vuelidate/lib/validators';
 
 export default defineComponent({
   name: 'UserInformation',
@@ -106,17 +113,21 @@ export default defineComponent({
     user: {
       email: { required, email, maxLength: maxLength(500) },
       password: {
+        minLength: minLength(6),
         required,
       },
       passwordConfirmation: {
-        required,
+        sameAsPassword: sameAs('password'),
       },
       firstName: {
         required,
+        maxLength: maxLength(500),
       },
       lastName: {
         required,
+        maxLength: maxLength(500),
       },
+      //TODO: add a special input and validation for phone number
       phoneNumber: {
         required,
       },
@@ -148,9 +159,9 @@ export default defineComponent({
         ...this.validationErrors,
         passwordConfirmation: '',
       };
-      if (!this.$v.user.passwordConfirmation.required) {
-        this.validationErrors.password =
-          'Password Confirmation cannot be empty';
+      if (!this.$v.user.passwordConfirmation.sameAsPassword) {
+        this.validationErrors.passwordConfirmation =
+          'Passwords must be identical';
       }
     },
     validateFirstName() {
@@ -159,7 +170,7 @@ export default defineComponent({
         firstName: '',
       };
       if (!this.$v.user.firstName.required) {
-        this.validationErrors.password = 'First Name cannot be empty';
+        this.validationErrors.firstName = 'First Name cannot be empty';
       }
     },
     validateLastName() {
@@ -172,7 +183,6 @@ export default defineComponent({
       }
     },
     validatePhoneNumber() {
-      //TODO: add verification for phone format
       this.validationErrors = {
         ...this.validationErrors,
         phoneNumber: '',
