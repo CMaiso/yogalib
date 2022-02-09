@@ -36,15 +36,18 @@
         justify-center
         rounded-md
         border border-transparent
+        bg-primary
         py-2
         px-4
         text-sm
         font-medium
         text-white
+        hover:bg-secondary
       "
+      v-if="currentStep > 1"
       @click="goNext"
     >
-      ({lastStep ? 'S'enregistrer': 'Suivant'})
+      {{ lastStep ? 'Valider' : 'Suivant' }}
     </button>
   </div>
 </template>
@@ -94,6 +97,9 @@ export default defineComponent({
     },
   },
   methods: {
+    hasError() {
+      //TODO: How can I know if I have errors in children component ?
+    },
     goBack() {
       this.currentStepNumber--;
     },

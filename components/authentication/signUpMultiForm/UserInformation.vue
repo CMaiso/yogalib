@@ -85,6 +85,7 @@ import {
   required,
   sameAs,
 } from 'vuelidate/lib/validators';
+import { startCase, toLower } from 'lodash';
 
 export default defineComponent({
   name: 'UserInformation',
@@ -136,7 +137,23 @@ export default defineComponent({
   methods: {
     onSubmit() {
       if (this.hasErrors) return;
-      //TODO: add Firebase call for create the account
+      this.newUserSignUp();
+      //TODO: add emit event currentStep
+    },
+    async newUserSignUp() {
+      //TODO: Need to know how can I use firebase cloud functions in Nuxt :( Missing something
+      const newUserSignUp = firebase.functions().httpsCallable('newUserSignUp');
+
+      await newUserSignUp({
+        email: this.email.toLowerCase(),
+        password: this.password,
+        firstName: this.firstLetterCapitalize(this.firstName),
+        lastName: this.firstLetterCapitalize(this.lastName),
+        phone: this.phoneNumber,
+      });
+    },
+    firstLetterCapitalize(name) {
+      return startCase(toLower(name));
     },
     //TODO: refactor validate functions (too much functions for one thing :( )
     validateEmail() {
