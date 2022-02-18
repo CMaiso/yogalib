@@ -85,7 +85,7 @@ import {
   required,
   sameAs,
 } from 'vuelidate/lib/validators';
-import { startCase, toLower } from 'lodash';
+// import { startCase, toLower } from 'lodash';
 
 export default defineComponent({
   name: 'UserInformation',
