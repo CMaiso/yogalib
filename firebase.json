@@ -4,8 +4,12 @@
     "source": "functions"
   },
   "hosting": {
-    "public": "dist",
-    "ignore": ["firebase.json", "**/.*", "**/node_modules/**"]
+    "public": "public",
+    "ignore": [
+      "firebase.json",
+      "**/.*",
+      "**/node_modules/**"
+    ]
   },
   "emulators": {
     "functions": {
@@ -16,6 +20,19 @@
     },
     "ui": {
       "enabled": true
+    },
+    "firestore": {
+      "port": 8080
+    },
+    "storage": {
+      "port": 9199
     }
+  },
+  "firestore": {
+    "rules": "firestore.rules",
+    "indexes": "firestore.indexes.json"
+  },
+  "storage": {
+    "rules": "storage.rules"
   }
 }

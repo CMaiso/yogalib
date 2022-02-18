@@ -1,7 +1,6 @@
 import * as functions from 'firebase-functions';
 import * as crypto from 'crypto';
 import * as nodemailer from 'nodemailer';
-
 import * as admin from 'firebase-admin';
 
 admin.initializeApp();
@@ -41,8 +40,8 @@ export const sendMailInvitation = functions.https.onCall(
                             </p>`,
         };
 
-        return new Promise<void>((resolve, reject) => {
-          transporter.sendMail(mailOptions, (error: any) => {
+        return new Promise((resolve, reject) => {
+          transporter.sendMail(mailOptions, (error) => {
             if (error) {
               reject(error);
             } else {
@@ -71,7 +70,7 @@ export const sendMailConfirmation = functions.https.onCall(
                             </p>`,
     };
 
-    transporter.sendMail(mailOptions, (error: any) => {
+    transporter.sendMail(mailOptions, (error) => {
       if (error) {
         return;
       }
