@@ -3,6 +3,8 @@ import * as crypto from 'crypto';
 import * as nodemailer from 'nodemailer';
 import * as admin from 'firebase-admin';
 
+const functions = getFunctions();
+
 admin.initializeApp();
 
 const sha1 = (email: string) => {
@@ -20,41 +22,32 @@ const transporter = nodemailer.createTransport({
 });
 
 export const sendMailInvitation = functions.https.onCall(
-  (data: { email: string }) => {
-    return admin
+  async (data: { email: string }) => {
+    const setUserInformation = admin
       .firestore()
       .collection('invitations')
       .doc(data.email)
       .set({
         email: data.email,
         hash: sha1(data.email),
-      })
-      .then(() => {
-        const mailOptions = {
-          from: `camille.maisonobe@gmail.com`,
-          to: data.email,
-          subject: 'Invitation à rejoindre Yogalib',
-          html: `<h1>Salut ! Rejoins Yogalib c'est trop cool!</h1>
+      });
+
+    try {
+      await setUserInformation;
+      const mailOptions = {
+        from: `camille.maisonobe@gmail.com`,
+        to: data.email,
+        subject: 'Invitation à rejoindre Yogalib',
+        html: `<h1>Salut ! Rejoins Yogalib c'est trop cool!</h1>
                             <p>
                                <b>Inscris-toi à <a href="http://localhost:3000/signup">cette adresse !</a><br>
                             </p>`,
-        };
+      };
 
-        return new Promise((resolve, reject) => {
-          transporter.sendMail(mailOptions, (error) => {
-            if (error) {
-              reject(error);
-            } else {
-              resolve();
-            }
-          });
-        }).catch((error) => {
-          throw new functions.https.HttpsError(
-            'failed-precondition',
-            `${error}`,
-          );
-        });
-      });
+      return await transporter.sendMail(mailOptions);
+    } catch (error) {
+      throw new functions.https.HttpsError('failed-precondition', `${error}`);
+    }
   },
 );
 

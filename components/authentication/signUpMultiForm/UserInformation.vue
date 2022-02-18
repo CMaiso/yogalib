@@ -76,8 +76,9 @@
 </template>
 
 <script lang="ts">
-import FormInput from '@/components/form/input';
+import FormInput from '~/components/form/input';
 import { defineComponent } from '@nuxtjs/composition-api';
+import * as stringHelpers from '~/helpers/string.js';
 import {
   email,
   minLength,
@@ -85,7 +86,6 @@ import {
   required,
   sameAs,
 } from 'vuelidate/lib/validators';
-// import { startCase, toLower } from 'lodash';
 
 export default defineComponent({
   name: 'UserInformation',
@@ -141,14 +141,13 @@ export default defineComponent({
       //TODO: add emit event currentStep
     },
     async newUserSignUp() {
-      //TODO: Need to know how can I use firebase cloud functions in Nuxt :( Missing something
-      const newUserSignUp = firebase.functions().httpsCallable('newUserSignUp');
+      const newUserSignUp = this.$fire.functions.httpsCallable('newUserSignUp');
 
       await newUserSignUp({
         email: this.email.toLowerCase(),
         password: this.password,
-        firstName: this.firstLetterCapitalize(this.firstName),
-        lastName: this.firstLetterCapitalize(this.lastName),
+        firstName: stringHelpers.capitalize(this.firstName),
+        lastName: stringHelpers.capitalize(this.lastName),
         phone: this.phoneNumber,
       });
     },

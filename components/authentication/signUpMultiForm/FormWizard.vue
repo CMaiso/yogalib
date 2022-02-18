@@ -53,10 +53,10 @@
 </template>
 
 <script lang="ts">
-import UserInformation from '~/components/authentication/signUpMultiForm/UserInformation';
-import YogaInformation from '~/components/authentication/signUpMultiForm/YogaInformation';
+import UserInformation from '~/components/authentication/signUpMultiForm/UserInformation.vue';
+import YogaInformation from '~/components/authentication/signUpMultiForm/YogaInformation.vue';
 import SocialInformation from '~/components/authentication/signUpMultiForm/SocialInformation.vue';
-import Description from '~/components/authentication/signUpMultiForm/Description';
+import Description from '~/components/authentication/signUpMultiForm/Description.vue';
 
 import { defineComponent } from '@nuxtjs/composition-api';
 
