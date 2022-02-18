@@ -11,14 +11,14 @@ export const mutations = {
     state.error = error;
   },
   UPDATE_USER(state, userInformation) {
-    state.authUser = { ... state.authUser, ...userInformation };
-  }
+    state.authUser = { ...state.authUser, ...userInformation };
+  },
 };
 
 export const actions = {
   async signInAction({ commit, dispatch }, { email, password }) {
     try {
-      const { user } = await this.$firebase.auth.signInWithEmailAndPassword(
+      const { user } = await this.$fire.auth.signInWithEmailAndPassword(
         email,
         password,
       );
@@ -36,7 +36,7 @@ export const actions = {
 
   async signOutAction({ commit }) {
     try {
-      await this.$firebase.auth.signOut();
+      await this.$fire.auth.signOut();
       commit('SET_USER', null);
     } catch (e) {
       commit('SET_ERROR', e.message);
@@ -44,7 +44,7 @@ export const actions = {
   },
 
   authAction({ commit }) {
-    this.$firebase.auth.onAuthStateChanged((user) => {
+    this.$fire.auth.onAuthStateChanged((user) => {
       if (user) {
         commit('SET_USER', { uid: user.uid, email: user.email });
       } else {
@@ -55,14 +55,16 @@ export const actions = {
 
   async fetchUserData({ commit, state }, { uid }) {
     try {
-      const collection = await this.$firebase.db.collection('users').doc(uid).get();
+      const collection = await this.$fire.firestore
+        .collection('users')
+        .doc(uid)
+        .get();
       const userInformation = await collection.data();
       commit('UPDATE_USER', userInformation);
-    }
-    catch (e) {
+    } catch (e) {
       commit('SET_ERROR', e.message);
     }
-  }
+  },
 };
 
 export const getters = {
@@ -76,5 +78,3 @@ export const getters = {
     return state.error;
   },
 };
-
-

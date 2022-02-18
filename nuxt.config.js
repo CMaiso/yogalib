@@ -17,7 +17,7 @@ export default {
   css: [],
 
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
-  plugins: [{ src: '~/plugins/firebase.client.js', mode: 'client' }, '~/plugins/vuelidate.js'],
+  plugins: ['~/plugins/vuelidate.js'],
 
   // Auto import components: https://go.nuxtjs.dev/config-components
   components: true,
@@ -34,7 +34,27 @@ export default {
   ],
 
   // Modules: https://go.nuxtjs.dev/config-modules
-  modules: [],
+  modules: [
+    [
+      '@nuxtjs/firebase',
+      {
+        config: {
+          apiKey: process.env.VUE_APP_FIREBASE_API_KEY,
+          authDomain: process.env.VUE_APP_FIREBASE_AUTH_DOMAIN,
+          projectId: process.env.VUE_APP_FIREBASE_PROJECT_ID,
+          storageBucket: process.env.VUE_APP_FIREBASE_STORAGE_BUCKET,
+          messagingSenderId: process.env.VUE_APP_FIREBASE_MESSAGING_SENDER_ID,
+          appId: process.env.VUE_APP_FIREBASE_APP_ID,
+        },
+        services: {
+          auth: true,
+          firestore: true,
+          functions: true,
+          storage: true,
+        },
+      },
+    ],
+  ],
 
   // Build Configuration: https://go.nuxtjs.dev/config-build
   build: {},
