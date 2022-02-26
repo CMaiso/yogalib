@@ -14,13 +14,10 @@
         placeholder-gray-600
         focus:border-gray-500 focus:bg-white focus:placeholder-gray-500
       "
-      :class="
-        this.invalidField() ? 'border-secondary' : 'border border-gray-100'
-      "
+      :class="this.invalidField ? 'border-secondary' : 'border border-gray-100'"
       :type="type"
-      @blur="$emit('validate')"
+      @blur="$emit('blur')"
       @input="onInput"
-      :value="value"
       v
     />
     <p v-if="error">{{ error }}</p>
@@ -28,31 +25,29 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from '@nuxtjs/composition-api';
+import { defineComponent, computed } from '@nuxtjs/composition-api';
 
 export default defineComponent({
   name: 'form-input',
   props: {
     label: { type: String, default: '' },
     error: { type: String, default: '' },
-    value: {
-      type: String,
-      default: '',
-    },
     v: {
       type: Object,
       required: true,
     },
     type: { type: String, default: 'text' },
   },
-  methods: {
-    invalidField(): object {
-      return this.error;
-    },
-    onInput(event) {
-      this.v.$touch();
-      this.$emit(`input`, event.target.value);
-    },
+  setup(props, { emit }) {
+    const invalidField = computed(() => {
+      return props.error;
+    });
+
+    const onInput = (event) => {
+      emit(`input`, event.target.value);
+    };
+
+    return { invalidField, onInput };
   },
 });
 </script>
