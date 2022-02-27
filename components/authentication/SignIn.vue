@@ -19,17 +19,17 @@
       <p class="mb-6 font-semibold">Connectez-vous à votre compte</p>
       <FormInput
         label="Email"
-        @validate="validateEmail()"
+        @blur="validateEmail()"
         :error="validationErrors.email"
         v-model="user.email"
-        :v="$v.user.email"
+        :v="v$.user.email"
       />
       <FormInput
         label="Mot de passe"
-        password
-        @validate="validatePassword()"
+        type="password"
+        @blur="validatePassword()"
         :error="validationErrors.password"
-        :v="$v.user.password"
+        :v="v$.user.password"
         v-model="user.password"
       />
 
@@ -87,67 +87,76 @@
 </template>
 
 <script lang="ts">
-import { required, maxLength, email } from 'vuelidate/lib/validators';
-import { defineComponent } from '@nuxtjs/composition-api';
-import FormInput from '~/components/form/input';
+import { required, maxLength, email } from '@vuelidate/validators';
+import {
+  defineComponent,
+  ref,
+  computed,
+  reactive,
+} from '@nuxtjs/composition-api';
+import { useStore } from 'vuex';
+import useVuelidate from '@vuelidate/core';
+import FormInput from '~/components/form/input.vue';
 
 export default defineComponent({
   name: `SignIn`,
   components: { FormInput },
-  data() {
-    return {
-      user: {
-        email: '' as String,
-        password: '' as String,
-      },
-      validationErrors: { email: '', password: '' } as Object,
-    };
-  },
-  validations: {
-    user: {
+
+  setup() {
+    const state = reactive({ user: { email: ``, password: `` } });
+
+    const validationErrors = ref({ email: ``, password: `` });
+
+    const rules = computed(() => ({
       email: { required, email, maxLength: maxLength(500) },
-      password: {
-        required,
-      },
-    },
-  },
-  methods: {
-    onSubmit(): void {
-      if (this.hasErrors) return;
-      this.$store.dispatch('authentication/signInAction', {
-        email: this.user.email,
-        password: this.user.password,
+      password: { required },
+    }));
+    const v$ = useVuelidate(rules, state);
+
+    const store = useStore();
+    const error = computed(() => store.getters('authentication/getError'));
+
+    const hasErrors = computed(() => {
+      return v$.user.$invalid;
+    });
+
+    const onSubmit = () => {
+      if (hasErrors) return;
+      store.dispatch('authentication/signInAction', {
+        email: state.user.email,
+        password: state.user.password,
       });
-    },
-    validateEmail(): void {
-      this.validationErrors = { ...this.validationErrors, email: '' }; //reset email errors
-      if (this.$v.user.email.$error) {
-        this.validationErrors.email = 'Email is invalid';
+    };
+
+    const validateEmail = () => {
+      v$.$touch();
+      this.validationErrors = { ...validationErrors, email: '' }; //reset email errors
+      if (v$.user.email.$error) {
+        validationErrors.email = 'Email is invalid';
       }
-      if (!this.$v.user.email.required) {
-        this.validationErrors.email = 'Email is required';
+      if (!v$.user.email.required) {
+        validationErrors.email = 'Email is required';
       }
-    },
-    validatePassword(): void {
-      this.validationErrors = { ...this.validationErrors, password: '' }; //reset password errors
-      if (!this.$v.user.password.required) {
-        this.validationErrors.password = 'Password cannot be empty';
+    };
+
+    const validatePassword = () => {
+      v$.$touch();
+      this.validationErrors = { ...validationErrors, password: '' }; //reset password errors
+      if (!v$.user.password.required) {
+        validationErrors.password = 'Password cannot be empty';
       }
-    },
-  },
-  computed: {
-    getUser() {
-      return this.$store.getters['authentication/getUser'];
-    },
-    isUserAuth() {
-      return this.$store.getters['authentication/isUserAuth'];
-    },
-    error() {
-      return this.$store.getters['authentication/getError'];
-    },
-    hasErrors() {
-      return this.$v.user.$invalid;
-    },
+    };
+
+    return {
+      state,
+      validationErrors,
+      v$,
+      error,
+      hasErrors,
+      onSubmit,
+      validateEmail,
+      validatePassword,
+    };
   },
 });
 </script>
