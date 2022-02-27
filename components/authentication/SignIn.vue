@@ -88,20 +88,19 @@
 
 <script lang="ts">
 import { required, maxLength, email } from '@vuelidate/validators';
+import { useAuthenticationStore } from '~/store/authentication';
 import {
   defineComponent,
   ref,
   computed,
   reactive,
 } from '@nuxtjs/composition-api';
-import { useStore } from 'vuex';
 import useVuelidate from '@vuelidate/core';
 import FormInput from '~/components/form/input.vue';
 
 export default defineComponent({
   name: `SignIn`,
   components: { FormInput },
-
   setup() {
     const state = reactive({ user: { email: ``, password: `` } });
 
@@ -113,8 +112,8 @@ export default defineComponent({
     }));
     const v$ = useVuelidate(rules, state);
 
-    const store = useStore();
-    const error = computed(() => store.getters('authentication/getError'));
+    const authenticationStore = useAuthenticationStore();
+    const error = authenticationStore.getError;
 
     const hasErrors = computed(() => {
       return v$.user.$invalid;
@@ -122,7 +121,7 @@ export default defineComponent({
 
     const onSubmit = () => {
       if (hasErrors) return;
-      store.dispatch('authentication/signInAction', {
+      authenticationStore.signInAction({
         email: state.user.email,
         password: state.user.password,
       });

@@ -31,6 +31,7 @@ export default {
     '@nuxtjs/dotenv',
     // @nuxtjs/composition-api
     '@nuxtjs/composition-api/module',
+    '@pinia/nuxt',
   ],
 
   // Modules: https://go.nuxtjs.dev/config-modules
