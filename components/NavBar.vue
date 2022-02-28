@@ -79,7 +79,7 @@
           sm:mt-0 sm:ml-2
         "
         v-if="isUserAuth"
-        @click="signOut"
+        @click="signOut()"
       >
         Déconnexion
       </button>
@@ -87,31 +87,37 @@
   </header>
 </template>
 
-<script>
-export default {
+<script lang="ts">
+import { defineComponent, ref } from '@nuxtjs/composition-api';
+import { useAuthenticationStore } from '~/store/authentication';
+
+export default defineComponent({
   name: 'NavBar',
-  data() {
+  setup() {
+    const isOpen = ref(false);
+
+    const authenticationStore = useAuthenticationStore();
+
+    const user = authenticationStore.getUser;
+    const isUserAuth = authenticationStore.isUserAuth;
+
+    const signOut = () => {
+      authenticationStore.signOutAction();
+    };
+
     return {
-      isOpen: false,
+      isOpen,
+      authenticationStore,
+      user,
+      isUserAuth,
+      signOut,
     };
   },
-  computed: {
-    user() {
-      return this.$store.getters['authentication/getUser'];
-    },
-    isUserAuth() {
-      return this.$store.getters['authentication/isUserAuth'];
-    },
-  },
-  methods: {
-    signOut() {
-      this.$store.dispatch('authentication/signOutAction');
-    },
-  },
   mounted() {
-    this.$store.dispatch('authentication/authAction');
+    const authenticationStore = useAuthenticationStore();
+    authenticationStore.authAction();
   },
-};
+});
 </script>
 
 <style scoped></style>
