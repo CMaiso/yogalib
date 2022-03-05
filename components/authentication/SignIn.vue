@@ -19,18 +19,16 @@
       <p class="mb-6 font-semibold">Connectez-vous à votre compte</p>
       <FormInput
         label="Email"
-        @blur="validateEmail()"
-        :error="validationErrors.email"
-        v-model="user.email"
-        :v="v$.user.email"
+        v-model="v$.email.$model"
+        :v="v$.email"
+        @blur="v$.email.$touch"
       />
       <FormInput
         label="Mot de passe"
         type="password"
-        @blur="validatePassword()"
-        :error="validationErrors.password"
-        :v="v$.user.password"
-        v-model="user.password"
+        :errors="v$.password.$errors"
+        v-model="v$.password.$model"
+        :v="v$.password"
       />
 
       <div class="flex items-center justify-between">
@@ -78,7 +76,7 @@
           text-white
         "
         type="submit"
-        :class="hasErrors ? 'bg-yellow-200' : 'bg-primary hover:bg-secondary'"
+        :class="v$.$invalid ? 'bg-yellow-200' : 'bg-primary hover:bg-secondary'"
       >
         Se connecter
       </button>
@@ -89,12 +87,7 @@
 <script lang="ts">
 import { required, maxLength, email } from '@vuelidate/validators';
 import { useAuthenticationStore } from '~/store/authentication';
-import {
-  defineComponent,
-  ref,
-  computed,
-  reactive,
-} from '@nuxtjs/composition-api';
+import { defineComponent, reactive } from '@nuxtjs/composition-api';
 import useVuelidate from '@vuelidate/core';
 import FormInput from '~/components/form/input.vue';
 
@@ -102,59 +95,29 @@ export default defineComponent({
   name: `SignIn`,
   components: { FormInput },
   setup() {
-    const state = reactive({ user: { email: ``, password: `` } });
+    const state = reactive({ email: ``, password: `` });
 
-    const validationErrors = ref({ email: ``, password: `` });
-
-    const rules = computed(() => ({
+    const rules = {
       email: { required, email, maxLength: maxLength(500) },
       password: { required },
-    }));
+    };
     const v$ = useVuelidate(rules, state);
 
     const authenticationStore = useAuthenticationStore();
     const error = authenticationStore.getError;
 
-    const hasErrors = computed(() => {
-      return v$.user.$invalid;
-    });
-
     const onSubmit = () => {
-      if (hasErrors) return;
+      if (v$.$invalid) return;
       authenticationStore.signInAction({
-        email: state.user.email,
-        password: state.user.password,
+        email: state.email,
+        password: state.password,
       });
     };
 
-    const validateEmail = () => {
-      v$.$touch();
-      this.validationErrors = { ...validationErrors, email: '' }; //reset email errors
-      if (v$.user.email.$error) {
-        validationErrors.email = 'Email is invalid';
-      }
-      if (!v$.user.email.required) {
-        validationErrors.email = 'Email is required';
-      }
-    };
-
-    const validatePassword = () => {
-      v$.$touch();
-      this.validationErrors = { ...validationErrors, password: '' }; //reset password errors
-      if (!v$.user.password.required) {
-        validationErrors.password = 'Password cannot be empty';
-      }
-    };
-
     return {
-      state,
-      validationErrors,
       v$,
       error,
-      hasErrors,
       onSubmit,
-      validateEmail,
-      validatePassword,
     };
   },
 });

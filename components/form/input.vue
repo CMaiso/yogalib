@@ -16,11 +16,13 @@
       "
       :class="this.invalidField ? 'border-secondary' : 'border border-gray-100'"
       :type="type"
-      @blur="$emit('blur')"
+      @blur="v.$touch"
       @input="onInput"
       v
     />
-    <p v-if="error">{{ error }}</p>
+    <div v-for="error of v.$errors" :key="error.$uid">
+      <div>{{ error.$message }}</div>
+    </div>
   </div>
 </template>
 
@@ -31,7 +33,6 @@ export default defineComponent({
   name: 'form-input',
   props: {
     label: { type: String, default: '' },
-    error: { type: String, default: '' },
     v: {
       type: Object,
       required: true,
