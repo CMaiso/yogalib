@@ -1,124 +1,89 @@
 <template>
   <form
     class="text-body flex flex-col rounded-xl bg-white p-8 text-left shadow-lg"
-    @submit.prevent="onSubmit()"
+    @input="onSubmit"
   >
     <h2 class="mb-2 font-title text-3xl font-extrabold text-secondary">
       Informations Personnelles
     </h2>
     <FormInput
       label="Email"
-      @validate="validateEmail()"
-      :error="validationErrors.email"
-      v-model="user.email"
-      :v="$v.user.email"
+      @blur="v$.email.$touch"
+      v-model="v$.email.$model"
+      :v="v$.email"
     />
     <FormInput
       label="Mot de passe"
       type="password"
-      @validate="validatePassword()"
-      :error="validationErrors.password"
-      :v="$v.user.password"
-      v-model="user.password"
+      @blur="v$.password.$touch"
+      :v="v$.password"
+      v-model="v$.password.$model"
     />
     <FormInput
       label="Confirmation Mot de passe"
       type="password"
-      @validate="validatePasswordConfirmation()"
-      :error="validationErrors.passwordConfirmation"
-      :v="$v.user.passwordConfirmation"
-      v-model="user.passwordConfirmation"
+      @blur="v$.passwordConfirmation.$touch"
+      :v="v$.passwordConfirmation"
+      v-model="v$.passwordConfirmation.$model"
     />
     <FormInput
       label="Prénom"
-      @validate="validateFirstName()"
-      :error="validationErrors.firstName"
-      :v="$v.user.firstName"
-      v-model="user.firstName"
+      @blur="v$.firstName.$touch"
+      :v="v$.firstName"
+      v-model="v$.firstName.$model"
     />
     <FormInput
       label="Nom"
-      @validate="validateLastName()"
-      :error="validationErrors.lastName"
-      :v="$v.user.lastName"
-      v-model="user.lastName"
+      @blur="v$.lastName.$touch"
+      :v="v$.lastName"
+      v-model="v$.lastName.$model"
     />
     <FormInput
-      label="Numéro de téléphone"
+      label="Téléphone"
       type="tel"
-      @validate="validatePhoneNumber()"
-      :error="validationErrors.phoneNumber"
-      :v="$v.user.phoneNumber"
-      v-model="user.phoneNumber"
+      @blur="v$.phone.$touch"
+      :v="v$.phone"
+      v-model="v$.phone.$model"
     />
-
-    <button
-      class="
-        focus:outline-none
-        mt-4
-        flex
-        w-full
-        justify-center
-        rounded-md
-        border border-transparent
-        py-2
-        px-4
-        text-sm
-        font-medium
-        text-white
-      "
-      type="submit"
-      :class="hasErrors ? 'bg-yellow-200' : 'bg-primary hover:bg-secondary'"
-    >
-      Suivant
-    </button>
   </form>
 </template>
 
 <script lang="ts">
-import FormInput from '~/components/form/input';
-import { defineComponent } from '@nuxtjs/composition-api';
-import * as stringHelpers from '~/helpers/string.js';
+import FormInput from '~/components/form/input.vue';
 import {
   email,
   minLength,
   maxLength,
   required,
   sameAs,
-} from 'vuelidate/lib/validators';
+} from '@vuelidate/validators';
+import { defineComponent, reactive } from '@nuxtjs/composition-api';
+import useVuelidate from '@vuelidate/core';
 
 export default defineComponent({
   name: 'UserInformation',
   components: { FormInput },
-  data() {
-    return {
-      user: {
-        email: '' as String,
-        password: '' as String,
-        passwordConfirmation: '' as String,
-        firstName: '' as String,
-        lastName: '' as String,
-        phoneNumber: '' as String,
-      },
-      validationErrors: {
-        email: '',
-        password: '',
-        passwordConfirmation: '',
-        firstName: '',
-        lastName: '',
-        phoneNumber: '',
-      } as Object,
-    };
-  },
-  validations: {
-    user: {
+  setup(props, { emit }) {
+    const state = reactive({
+      email: '',
+      password: '',
+      passwordConfirmation: '',
+      firstName: '',
+      lastName: '',
+      phone: '',
+    });
+
+    const rules = {
       email: { required, email, maxLength: maxLength(500) },
       password: {
         minLength: minLength(6),
         required,
       },
       passwordConfirmation: {
-        sameAsPassword: sameAs('password'),
+        required,
+        // sameAsPassword: sameAs(state.password),
+        //TODO: create a custom validator
+        // https://stackoverflow.com/questions/67938208/vuelidate-using-vue-2-6-and-composition-api
       },
       firstName: {
         required,
@@ -129,89 +94,28 @@ export default defineComponent({
         maxLength: maxLength(500),
       },
       //TODO: add a special input and validation for phone number
-      phoneNumber: {
+      phone: {
         required,
       },
-    },
-  },
-  methods: {
-    onSubmit() {
-      if (this.hasErrors) return;
-      this.newUserSignUp();
-      //TODO: add emit event currentStep
-    },
-    async newUserSignUp() {
-      const newUserSignUp = this.$fire.functions.httpsCallable('newUserSignUp');
+    };
+    const v$ = useVuelidate(rules, state);
 
-      await newUserSignUp({
-        email: this.email.toLowerCase(),
-        password: this.password,
-        firstName: stringHelpers.capitalize(this.firstName),
-        lastName: stringHelpers.capitalize(this.lastName),
-        phone: this.phoneNumber,
+    const onSubmit = () => {
+      if (v$.value.$invalid) return;
+      emit(`update`, {
+        email: state.email,
+        password: state.password,
+        firstName: state.firstName,
+        lastName: state.lastName,
+        phone: state.phone,
+        valid: !v$.value.$invalid,
       });
-    },
-    firstLetterCapitalize(name) {
-      return startCase(toLower(name));
-    },
-    //TODO: refactor validate functions (too much functions for one thing :( )
-    validateEmail() {
-      this.validationErrors = { ...this.validationErrors, email: '' };
-      if (this.$v.user.email.$error) {
-        this.validationErrors.email = 'Email is invalid';
-      }
-      if (!this.$v.user.email.required) {
-        this.validationErrors.email = 'Email is required';
-      }
-    },
-    validatePassword() {
-      this.validationErrors = { ...this.validationErrors, password: '' };
-      if (!this.$v.user.password.required) {
-        this.validationErrors.password = 'Password cannot be empty';
-      }
-    },
-    validatePasswordConfirmation() {
-      this.validationErrors = {
-        ...this.validationErrors,
-        passwordConfirmation: '',
-      };
-      if (!this.$v.user.passwordConfirmation.sameAsPassword) {
-        this.validationErrors.passwordConfirmation =
-          'Passwords must be identical';
-      }
-    },
-    validateFirstName() {
-      this.validationErrors = {
-        ...this.validationErrors,
-        firstName: '',
-      };
-      if (!this.$v.user.firstName.required) {
-        this.validationErrors.firstName = 'First Name cannot be empty';
-      }
-    },
-    validateLastName() {
-      this.validationErrors = {
-        ...this.validationErrors,
-        lastName: '',
-      };
-      if (!this.$v.user.lastName.required) {
-        this.validationErrors.lastName = 'Last Name cannot be empty';
-      }
-    },
-    validatePhoneNumber() {
-      this.validationErrors = {
-        ...this.validationErrors,
-        phoneNumber: '',
-      };
-      if (!this.$v.user.phoneNumber.required) {
-        this.validationErrors.phoneNumber = 'Phone Number cannot be empty';
-      }
-    },
-  },
-  computed: {
-    hasErrors() {
-      return this.$v.user.$invalid;
-    },
+    };
+
+    return {
+      v$,
+      onSubmit,
+    };
   },
 });
 </script>

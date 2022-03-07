@@ -6,7 +6,7 @@
         :style="{ width: `${progressBar}%` }"
       ></div>
     </div>
-    <component :is="currentStep"></component>
+    <component :is="currentStep" @update="updateData"></component>
     <button
       class="
         focus:outline-none
@@ -44,7 +44,7 @@
         text-white
         hover:bg-secondary
       "
-      v-if="currentStep > 1"
+      v-if="currentStep"
       @click="goNext"
     >
       {{ lastStep ? 'Valider' : 'Suivant' }}
@@ -58,7 +58,8 @@ import YogaInformation from '~/components/authentication/signUpMultiForm/YogaInf
 import SocialInformation from '~/components/authentication/signUpMultiForm/SocialInformation.vue';
 import Description from '~/components/authentication/signUpMultiForm/Description.vue';
 
-import { defineComponent } from '@nuxtjs/composition-api';
+import { defineComponent, reactive, computed } from '@nuxtjs/composition-api';
+import * as stringHelpers from '~/helpers/string';
 
 export default defineComponent({
   name: 'FormWizard',
@@ -68,45 +69,71 @@ export default defineComponent({
     SocialInformation,
     Description,
   },
-  data() {
-    return {
+  setup() {
+    const state = reactive({
+      email: '',
+      password: '',
+      firstName: '',
+      lastName: '',
+      phone: '',
+      yogaStyle: '',
+      language: '',
+      experience: '',
+      instagram: '',
+      facebook: '',
+      website: '',
       currentStepNumber: 1,
       steps: [UserInformation, YogaInformation, SocialInformation, Description],
-      form: {
-        yogaStyle: '',
-        language: '',
-        experience: '',
-        instagram: '',
-        facebook: '',
-        website: '',
-      },
+      valid: false,
+    });
+
+    const progressBar = computed(() => {
+      return (state.currentStepNumber / length) * 100;
+    });
+    const length = computed(() => {
+      return state.steps.length;
+    });
+    const lastStep = computed(() => {
+      return state.currentStepNumber === length;
+    });
+    const currentStep = computed(() => {
+      return state.steps[state.currentStepNumber - 1];
+    });
+
+    const goBack = () => {
+      state.currentStepNumber--;
     };
-  },
-  computed: {
-    progressBar() {
-      return (this.currentStepNumber / this.length) * 100;
-    },
-    length() {
-      return this.steps.length;
-    },
-    lastStep() {
-      return this.currentStepNumber === this.length;
-    },
-    currentStep() {
-      return this.steps[this.currentStepNumber - 1];
-    },
-  },
-  methods: {
-    hasError() {
-      //TODO: How can I know if I have errors in children component ?
-    },
-    goBack() {
-      this.currentStepNumber--;
-    },
-    goNext() {
-      if (this.lastStep) return;
-      this.currentStepNumber++;
-    },
+    const goNext = () => {
+      if (lastStep) return;
+      state.currentStepNumber++;
+    };
+    const updateData = (data) => {
+      console.log(data);
+      Object.assign(state, data);
+    };
+    const newUserSignUp = async () => {
+      const newUserSignUp = this.$fire.functions.httpsCallable('newUserSignUp');
+
+      await newUserSignUp({
+        email: this.email.toLowerCase(),
+        password: this.password,
+        firstName: stringHelpers.capitalize(this.firstName),
+        lastName: stringHelpers.capitalize(this.lastName),
+        phone: this.phone,
+      });
+    };
+
+    return {
+      state,
+      progressBar,
+      length,
+      lastStep,
+      currentStep,
+      goBack,
+      goNext,
+      updateData,
+      newUserSignUp,
+    };
   },
 });
 </script>
