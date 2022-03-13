@@ -6,7 +6,9 @@
         :style="{ width: `${progressBar}%` }"
       ></div>
     </div>
-    <component :is="currentStep" @update="updateData"></component>
+    <KeepAlive>
+      <component :is="currentStep" @update="updateData"></component>
+    </KeepAlive>
     <div class="flex">
       <button
         class="
@@ -48,6 +50,7 @@
           hover:bg-secondary
         "
         @click="goNext"
+        :disabled="!state.valid"
       >
         {{ lastStep ? 'Valider' : 'Suivant' }}
       </button>
@@ -105,14 +108,17 @@ export default defineComponent({
 
     const goBack = () => {
       state.currentStepNumber--;
+      state.valid = true;
     };
     const goNext = () => {
       if (lastStep.value) return;
       state.currentStepNumber++;
+      state.valid = false;
     };
     const updateData = (data) => {
       console.log(data);
       Object.assign(state, data);
+      state.valid = data.valid;
     };
     const newUserSignUp = async () => {
       const newUserSignUp = this.$fire.functions.httpsCallable('newUserSignUp');
