@@ -11,7 +11,7 @@ export const useAuthenticationStore = defineStore('authenticationStore', {
   actions: {
     async signInAction({ email, password }) {
       try {
-        const { user } = await this.$fire.auth.signInWithEmailAndPassword(
+        const { user } = await this.$nuxt.$fire.auth.signInWithEmailAndPassword(
           email,
           password,
         );
@@ -28,7 +28,7 @@ export const useAuthenticationStore = defineStore('authenticationStore', {
 
     async signOutAction() {
       try {
-        await this.$fire.auth.signOut();
+        await this.$nuxt.$fire.auth.signOut();
         this.authUser = null;
       } catch (e) {
         this.error = e.message;
@@ -36,7 +36,7 @@ export const useAuthenticationStore = defineStore('authenticationStore', {
     },
 
     authAction() {
-      this.$fire.auth.onAuthStateChanged((user) => {
+      this.$nuxt.$fire.auth.onAuthStateChanged((user) => {
         if (user) {
           this.authUser = { uid: user.uid, email: user.email };
         } else {
@@ -47,7 +47,7 @@ export const useAuthenticationStore = defineStore('authenticationStore', {
 
     async fetchUserData({ uid }) {
       try {
-        const collection = await this.$fire.firestore
+        const collection = await this.$nuxt.$fire.firestore
           .collection('users')
           .doc(uid)
           .get();

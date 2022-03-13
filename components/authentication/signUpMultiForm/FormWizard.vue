@@ -7,48 +7,51 @@
       ></div>
     </div>
     <component :is="currentStep" @update="updateData"></component>
-    <button
-      class="
-        focus:outline-none
-        mt-4
-        flex
-        w-full
-        justify-center
-        rounded-md
-        border border-transparent
-        py-2
-        px-4
-        text-sm
-        font-medium
-        text-white
-      "
-      @click="goBack"
-      v-if="currentStep > 1"
-    >
-      Précédent
-    </button>
-    <button
-      class="
-        focus:outline-none
-        mt-4
-        flex
-        w-full
-        justify-center
-        rounded-md
-        border border-transparent
-        bg-primary
-        py-2
-        px-4
-        text-sm
-        font-medium
-        text-white
-        hover:bg-secondary
-      "
-      v-if="currentStep"
-      @click="goNext"
-    >
-      {{ lastStep ? 'Valider' : 'Suivant' }}
-    </button>
+    <div class="flex">
+      <button
+        class="
+          focus:outline-none
+          mt-4
+          flex
+          w-full
+          justify-center
+          rounded-md
+          border border-transparent
+          bg-primary
+          py-2
+          px-4
+          text-sm
+          font-medium
+          text-white
+          hover:bg-secondary
+        "
+        @click="goBack"
+        v-if="state.currentStepNumber > 1"
+      >
+        Précédent
+      </button>
+      <button
+        class="
+          focus:outline-none
+          mt-4
+          flex
+          w-full
+          justify-center
+          rounded-md
+          border border-transparent
+          bg-primary
+          py-2
+          px-4
+          text-sm
+          font-medium
+          text-white
+          hover:bg-secondary
+        "
+        @click="goNext"
+      >
+        {{ lastStep ? 'Valider' : 'Suivant' }}
+      </button>
+    </div>
   </div>
 </template>
 
@@ -88,13 +91,13 @@ export default defineComponent({
     });
 
     const progressBar = computed(() => {
-      return (state.currentStepNumber / length) * 100;
+      return (state.currentStepNumber / length.value) * 100;
     });
     const length = computed(() => {
       return state.steps.length;
     });
     const lastStep = computed(() => {
-      return state.currentStepNumber === length;
+      return state.currentStepNumber === length.value;
     });
     const currentStep = computed(() => {
       return state.steps[state.currentStepNumber - 1];
@@ -104,7 +107,7 @@ export default defineComponent({
       state.currentStepNumber--;
     };
     const goNext = () => {
-      if (lastStep) return;
+      if (lastStep.value) return;
       state.currentStepNumber++;
     };
     const updateData = (data) => {

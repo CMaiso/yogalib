@@ -41,7 +41,7 @@ export default defineComponent({
   },
   setup(props, { emit }) {
     const invalidField = computed(() => {
-      return props.error;
+      return props.v.$error;
     });
 
     const onInput = (event) => {
