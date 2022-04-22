@@ -60,26 +60,9 @@
           </a>
         </div>
       </div>
-      <button
-        class="
-          focus:outline-none
-          mt-4
-          flex
-          w-full
-          justify-center
-          rounded-md
-          border border-transparent
-          py-2
-          px-4
-          text-sm
-          font-medium
-          text-white
-        "
-        type="submit"
-        :class="v$.$invalid ? 'bg-yellow-200' : 'bg-primary hover:bg-secondary'"
-      >
+      <FormButton type="submit" :disabled="v$.$invalid">
         Se connecter
-      </button>
+      </FormButton>
     </form>
   </section>
 </template>
@@ -89,11 +72,12 @@ import { required, maxLength, email } from '@vuelidate/validators';
 import { useAuthenticationStore } from '~/store/authentication';
 import { defineComponent, reactive } from '@nuxtjs/composition-api';
 import useVuelidate from '@vuelidate/core';
+import FormButton from '~/components/form/button.vue';
 import FormInput from '~/components/form/input.vue';
 
 export default defineComponent({
   name: `SignIn`,
-  components: { FormInput },
+  components: { FormButton, FormInput },
   setup() {
     const state = reactive({ email: ``, password: `` });
 

@@ -10,55 +10,18 @@
       <component :is="currentStep" @update="updateData"></component>
     </KeepAlive>
     <div class="flex">
-      <button
-        class="
-          focus:outline-none
-          mt-4
-          flex
-          w-full
-          justify-center
-          rounded-md
-          border border-transparent
-          bg-primary
-          py-2
-          px-4
-          text-sm
-          font-medium
-          text-white
-          hover:bg-secondary
-        "
-        @click="goBack"
-        v-if="state.currentStepNumber > 1"
-      >
+      <FormButton v-if="state.currentStepNumber > 1" @click="goBack">
         Précédent
-      </button>
-      <button
-        class="
-          focus:outline-none
-          mt-4
-          flex
-          w-full
-          justify-center
-          rounded-md
-          border border-transparent
-          bg-primary
-          py-2
-          px-4
-          text-sm
-          font-medium
-          text-white
-          hover:bg-secondary
-        "
-        @click="goNext"
-        :disabled="!state.valid"
-      >
+      </FormButton>
+      <FormButton @click="goNext" :disabled="!state.valid">
         {{ lastStep ? 'Valider' : 'Suivant' }}
-      </button>
+      </FormButton>
     </div>
   </div>
 </template>
 
 <script lang="ts">
+import FormButton from '~/components/form/button.vue';
 import UserInformation from '~/components/authentication/signUpMultiForm/UserInformation.vue';
 import YogaInformation from '~/components/authentication/signUpMultiForm/YogaInformation.vue';
 import SocialInformation from '~/components/authentication/signUpMultiForm/SocialInformation.vue';
@@ -70,6 +33,7 @@ import * as stringHelpers from '~/helpers/string';
 export default defineComponent({
   name: 'FormWizard',
   components: {
+    FormButton,
     UserInformation,
     YogaInformation,
     SocialInformation,
