@@ -5,7 +5,7 @@
 </template>
 
 <script lang="ts">
-import FormWizard from '~/components/authentication/signUpMultiForm/FormWizard';
+import FormWizard from '~/components/authentication/signUpMultiForm/FormWizard.vue';
 
 export default {
   components: {

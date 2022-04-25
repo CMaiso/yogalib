@@ -1,5 +1,7 @@
 <template>
-  <SignIn />
+  <div class="flex h-full w-full items-center justify-center">
+    <SignIn />
+  </div>
 </template>
 
 <script lang="ts">
