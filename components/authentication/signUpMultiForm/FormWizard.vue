@@ -1,13 +1,17 @@
 <template>
   <div>
-    <div class="h-6 w-full rounded-full bg-gray-200 dark:bg-gray-700">
+    <div class="h-6 rounded-full bg-gray-200 dark:bg-gray-700">
       <div
         class="h-6 rounded-full bg-gray-600 dark:bg-gray-300"
         :style="{ width: `${progressBar}%` }"
       ></div>
     </div>
     <KeepAlive>
-      <component :is="currentStep" @update="updateData"></component>
+      <component
+        :is="currentStep"
+        :user="state"
+        @update="updateData"
+      ></component>
     </KeepAlive>
     <div class="flex">
       <FormButton v-if="state.currentStepNumber > 1" @click="goBack">
@@ -27,8 +31,19 @@ import YogaInformation from '~/components/authentication/signUpMultiForm/YogaInf
 import SocialInformation from '~/components/authentication/signUpMultiForm/SocialInformation.vue';
 import Description from '~/components/authentication/signUpMultiForm/Description.vue';
 
-import { defineComponent, reactive, computed } from '@nuxtjs/composition-api';
+import {
+  defineComponent,
+  reactive,
+  computed,
+  ref,
+} from '@nuxtjs/composition-api';
 import * as stringHelpers from '~/helpers/string';
+
+const formatPercent = new Intl.NumberFormat(`en-US`, {
+  style: `percent`,
+  minimumFractionDigits: 2,
+  maximumFractionDigits: 2,
+}).format;
 
 export default defineComponent({
   name: 'FormWizard',
@@ -52,22 +67,30 @@ export default defineComponent({
       instagram: '',
       facebook: '',
       website: '',
-      currentStepNumber: 1,
-      steps: [UserInformation, YogaInformation, SocialInformation, Description],
-      valid: false,
     });
 
-    const progressBar = computed(() => {
-      return (state.currentStepNumber / length.value) * 100;
-    });
+    const currentStepNumber = ref(1);
+    const steps = ref([
+      UserInformation,
+      YogaInformation,
+      SocialInformation,
+      Description,
+    ]);
+    const valid = ref(false);
     const length = computed(() => {
-      return state.steps.length;
+      return steps.value.length;
+    });
+    const progressBar = computed(() => {
+      return (currentStepNumber.value / length.value) * 100;
+    });
+    const formattedProgress = computed(() => {
+      return formatPercent(currentStepNumber.value / length.value);
     });
     const lastStep = computed(() => {
-      return state.currentStepNumber === length.value;
+      return currentStepNumber.value === length.value;
     });
     const currentStep = computed(() => {
-      return state.steps[state.currentStepNumber - 1];
+      return steps.value[currentStepNumber.value - 1];
     });
 
     const goBack = () => {
@@ -98,6 +121,10 @@ export default defineComponent({
 
     return {
       state,
+      valid,
+      steps,
+      currentStepNumber,
+      formattedProgress,
       progressBar,
       length,
       lastStep,

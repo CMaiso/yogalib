@@ -11,6 +11,7 @@
       @blur="v$.email.$touch"
       v-model="v$.email.$model"
       :v="v$.email"
+      type="email"
     />
     <FormInput
       label="Mot de passe"
@@ -63,16 +64,8 @@ import useVuelidate from '@vuelidate/core';
 export default defineComponent({
   name: 'UserInformation',
   components: { FormInput },
+  props: { user: Object },
   setup(props, { emit }) {
-    const state = reactive({
-      email: '',
-      password: '',
-      passwordConfirmation: '',
-      firstName: '',
-      lastName: '',
-      phone: '',
-    });
-
     const rules = {
       email: { required, email, maxLength: maxLength(500) },
       password: {
@@ -98,23 +91,10 @@ export default defineComponent({
         required,
       },
     };
-    const v$ = useVuelidate(rules, state);
-
-    const onSubmit = () => {
-      if (v$.value.$invalid) return;
-      emit(`update`, {
-        email: state.email,
-        password: state.password,
-        firstName: state.firstName,
-        lastName: state.lastName,
-        phone: state.phone,
-        valid: !v$.value.$invalid,
-      });
-    };
+    const v$ = useVuelidate(rules, props.user);
 
     return {
       v$,
-      onSubmit,
     };
   },
 });

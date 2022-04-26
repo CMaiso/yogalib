@@ -1,5 +1,5 @@
 <template>
-  <div class="flex h-full w-full items-center justify-center">
+  <div class="flex flex-1 items-center justify-center">
     <SignIn />
   </div>
 </template>

@@ -1,8 +1,7 @@
 <template>
   <header
     class="
-      absolute
-      w-full
+      flex-none
       bg-white
       sm:flex sm:items-center sm:justify-between sm:px-4 sm:py-3
     "
