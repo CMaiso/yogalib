@@ -1,8 +1,8 @@
 <template>
   <div>
-    <div class="h-6 rounded-full bg-gray-200 dark:bg-gray-700">
+    <div class="mb-5 h-6 flex-1 rounded-full bg-gray-200 dark:bg-gray-700">
       <div
-        class="h-6 rounded-full bg-gray-600 dark:bg-gray-300"
+        class="h-6 rounded-full bg-secondary dark:bg-gray-300"
         :style="{ width: `${progressBar}%` }"
       ></div>
     </div>
@@ -102,11 +102,6 @@ export default defineComponent({
       state.currentStepNumber++;
       state.valid = false;
     };
-    const updateData = (data) => {
-      console.log(data);
-      Object.assign(state, data);
-      state.valid = data.valid;
-    };
     const newUserSignUp = async () => {
       const newUserSignUp = this.$fire.functions.httpsCallable('newUserSignUp');
 
@@ -131,7 +126,6 @@ export default defineComponent({
       currentStep,
       goBack,
       goNext,
-      updateData,
       newUserSignUp,
     };
   },

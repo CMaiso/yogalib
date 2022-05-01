@@ -1,8 +1,5 @@
 <template>
-  <form
-    class="text-body flex flex-col rounded-xl bg-white p-8 text-left shadow-lg"
-    @submit.prevent="onSubmit()"
-  >
+  <FormCard @submit.prevent="onSubmit()">
     <h2 class="mb-2 font-title text-3xl font-extrabold text-secondary">
       Welcome back !
     </h2>
@@ -51,7 +48,7 @@
     <FormButton type="submit" :disabled="v$.$invalid">
       Se connecter
     </FormButton>
-  </form>
+  </FormCard>
 </template>
 
 <script lang="ts">
@@ -61,10 +58,11 @@ import { defineComponent, reactive } from '@nuxtjs/composition-api';
 import useVuelidate from '@vuelidate/core';
 import FormButton from '~/components/form/button.vue';
 import FormInput from '~/components/form/input.vue';
+import FormCard from '~/components/form/card.vue';
 
 export default defineComponent({
   name: `SignIn`,
-  components: { FormButton, FormInput },
+  components: { FormButton, FormInput, FormCard },
   setup() {
     const state = reactive({ email: ``, password: `` });
 

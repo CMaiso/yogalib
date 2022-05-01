@@ -15,7 +15,7 @@
       font-medium
       text-white
       hover:bg-secondary
-      disabled:bg-yellow-200
+      disabled:bg-gray-300
     "
     @click="onClick"
     :disabled="disabled"

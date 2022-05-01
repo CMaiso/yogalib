@@ -1,9 +1,10 @@
 <template>
   <div>
-    <label class="mb-1">{{ label }}</label>
+    <label class="font-semibold">{{ label }}</label>
     <input
       class="
         outline-none
+        mt-1
         mb-4
         w-full
         rounded-md
