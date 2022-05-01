@@ -7,11 +7,7 @@
       ></div>
     </div>
     <KeepAlive>
-      <component
-        :is="currentStep"
-        :user="state"
-        @update="updateData"
-      ></component>
+      <component :is="currentStep" :user="state"></component>
     </KeepAlive>
     <div class="flex">
       <FormButton v-if="state.currentStepNumber > 1" @click="goBack">
