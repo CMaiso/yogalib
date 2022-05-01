@@ -1,7 +1,6 @@
 <template>
   <form
     class="text-body flex flex-col rounded-xl bg-white p-8 text-left shadow-lg"
-    @input="onSubmit"
   >
     <h2 class="mb-2 font-title text-3xl font-extrabold text-secondary">
       Informations Personnelles
