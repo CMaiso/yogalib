@@ -1,11 +1,11 @@
 <template>
-  <div class="flex w-full items-center justify-center">
+  <div class="flex flex-1 items-center justify-center">
     <FormWizard />
   </div>
 </template>
 
 <script lang="ts">
-import FormWizard from '~/components/authentication/signUpMultiForm/FormWizard';
+import FormWizard from '~/components/authentication/signUpMultiForm/FormWizard.vue';
 
 export default {
   components: {

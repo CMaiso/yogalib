@@ -1,16 +1,12 @@
 <template>
-  <form
-    class="text-body flex flex-col rounded-xl bg-white p-8 text-left shadow-lg"
-    @input="onSubmit"
-  >
-    <h2 class="mb-2 font-title text-3xl font-extrabold text-secondary">
-      Informations Personnelles
-    </h2>
+  <FormCard>
+    <FormTitle title="Informations Personnelles" />
     <FormInput
       label="Email"
       @blur="v$.email.$touch"
       v-model="v$.email.$model"
       :v="v$.email"
+      type="email"
     />
     <FormInput
       label="Mot de passe"
@@ -45,34 +41,22 @@
       :v="v$.phone"
       v-model="v$.phone.$model"
     />
-  </form>
+  </FormCard>
 </template>
 
 <script lang="ts">
 import FormInput from '~/components/form/input.vue';
-import {
-  email,
-  minLength,
-  maxLength,
-  required,
-  sameAs,
-} from '@vuelidate/validators';
-import { defineComponent, reactive } from '@nuxtjs/composition-api';
+import FormTitle from '~/components/form/title.vue';
+import FormCard from '~/components/form/card.vue';
+import { email, minLength, maxLength, required } from '@vuelidate/validators';
+import { defineComponent } from '@nuxtjs/composition-api';
 import useVuelidate from '@vuelidate/core';
 
 export default defineComponent({
   name: 'UserInformation',
-  components: { FormInput },
+  components: { FormInput, FormTitle, FormCard },
+  props: { user: Object },
   setup(props, { emit }) {
-    const state = reactive({
-      email: '',
-      password: '',
-      passwordConfirmation: '',
-      firstName: '',
-      lastName: '',
-      phone: '',
-    });
-
     const rules = {
       email: { required, email, maxLength: maxLength(500) },
       password: {
@@ -98,23 +82,10 @@ export default defineComponent({
         required,
       },
     };
-    const v$ = useVuelidate(rules, state);
-
-    const onSubmit = () => {
-      if (v$.value.$invalid) return;
-      emit(`update`, {
-        email: state.email,
-        password: state.password,
-        firstName: state.firstName,
-        lastName: state.lastName,
-        phone: state.phone,
-        valid: !v$.value.$invalid,
-      });
-    };
+    const v$ = useVuelidate(rules, props.user);
 
     return {
       v$,
-      onSubmit,
     };
   },
 });

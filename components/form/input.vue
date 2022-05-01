@@ -1,10 +1,10 @@
 <template>
-  <div>
-    <label class="mb-1">{{ label }}</label>
+  <div class="mt-4">
+    <label class="font-semibold">{{ label }}</label>
     <input
       class="
         outline-none
-        mb-4
+        mt-2
         w-full
         rounded-md
         border border-gray-100
@@ -21,7 +21,9 @@
       v
     />
     <div v-for="error of v.$errors" :key="error.$uid">
-      <div>{{ error.$message }}</div>
+      <div class="mt-1 text-xs text-sm font-semibold text-secondary">
+        {{ error.$message }}
+      </div>
     </div>
   </div>
 </template>

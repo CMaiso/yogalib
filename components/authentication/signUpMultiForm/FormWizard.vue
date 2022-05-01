@@ -1,75 +1,50 @@
 <template>
   <div>
-    <div class="h-6 w-full rounded-full bg-gray-200 dark:bg-gray-700">
+    <div class="mb-5 h-6 flex-1 rounded-full bg-gray-200 dark:bg-gray-700">
       <div
-        class="h-6 rounded-full bg-gray-600 dark:bg-gray-300"
+        class="h-6 rounded-full bg-secondary dark:bg-gray-300"
         :style="{ width: `${progressBar}%` }"
       ></div>
     </div>
     <KeepAlive>
-      <component :is="currentStep" @update="updateData"></component>
+      <component :is="currentStep" :user="state"></component>
     </KeepAlive>
     <div class="flex">
-      <button
-        class="
-          focus:outline-none
-          mt-4
-          flex
-          w-full
-          justify-center
-          rounded-md
-          border border-transparent
-          bg-primary
-          py-2
-          px-4
-          text-sm
-          font-medium
-          text-white
-          hover:bg-secondary
-        "
-        @click="goBack"
-        v-if="state.currentStepNumber > 1"
-      >
+      <FormButton v-if="state.currentStepNumber > 1" @click="goBack">
         Précédent
-      </button>
-      <button
-        class="
-          focus:outline-none
-          mt-4
-          flex
-          w-full
-          justify-center
-          rounded-md
-          border border-transparent
-          bg-primary
-          py-2
-          px-4
-          text-sm
-          font-medium
-          text-white
-          hover:bg-secondary
-        "
-        @click="goNext"
-        :disabled="!state.valid"
-      >
+      </FormButton>
+      <FormButton @click="goNext" :disabled="!state.valid">
         {{ lastStep ? 'Valider' : 'Suivant' }}
-      </button>
+      </FormButton>
     </div>
   </div>
 </template>
 
 <script lang="ts">
+import FormButton from '~/components/form/button.vue';
 import UserInformation from '~/components/authentication/signUpMultiForm/UserInformation.vue';
 import YogaInformation from '~/components/authentication/signUpMultiForm/YogaInformation.vue';
 import SocialInformation from '~/components/authentication/signUpMultiForm/SocialInformation.vue';
 import Description from '~/components/authentication/signUpMultiForm/Description.vue';
 
-import { defineComponent, reactive, computed } from '@nuxtjs/composition-api';
+import {
+  defineComponent,
+  reactive,
+  computed,
+  ref,
+} from '@nuxtjs/composition-api';
 import * as stringHelpers from '~/helpers/string';
+
+const formatPercent = new Intl.NumberFormat(`en-US`, {
+  style: `percent`,
+  minimumFractionDigits: 2,
+  maximumFractionDigits: 2,
+}).format;
 
 export default defineComponent({
   name: 'FormWizard',
   components: {
+    FormButton,
     UserInformation,
     YogaInformation,
     SocialInformation,
@@ -88,22 +63,30 @@ export default defineComponent({
       instagram: '',
       facebook: '',
       website: '',
-      currentStepNumber: 1,
-      steps: [UserInformation, YogaInformation, SocialInformation, Description],
-      valid: false,
     });
 
-    const progressBar = computed(() => {
-      return (state.currentStepNumber / length.value) * 100;
-    });
+    const currentStepNumber = ref(1);
+    const steps = ref([
+      UserInformation,
+      YogaInformation,
+      SocialInformation,
+      Description,
+    ]);
+    const valid = ref(false);
     const length = computed(() => {
-      return state.steps.length;
+      return steps.value.length;
+    });
+    const progressBar = computed(() => {
+      return (currentStepNumber.value / length.value) * 100;
+    });
+    const formattedProgress = computed(() => {
+      return formatPercent(currentStepNumber.value / length.value);
     });
     const lastStep = computed(() => {
-      return state.currentStepNumber === length.value;
+      return currentStepNumber.value === length.value;
     });
     const currentStep = computed(() => {
-      return state.steps[state.currentStepNumber - 1];
+      return steps.value[currentStepNumber.value - 1];
     });
 
     const goBack = () => {
@@ -114,11 +97,6 @@ export default defineComponent({
       if (lastStep.value) return;
       state.currentStepNumber++;
       state.valid = false;
-    };
-    const updateData = (data) => {
-      console.log(data);
-      Object.assign(state, data);
-      state.valid = data.valid;
     };
     const newUserSignUp = async () => {
       const newUserSignUp = this.$fire.functions.httpsCallable('newUserSignUp');
@@ -134,13 +112,16 @@ export default defineComponent({
 
     return {
       state,
+      valid,
+      steps,
+      currentStepNumber,
+      formattedProgress,
       progressBar,
       length,
       lastStep,
       currentStep,
       goBack,
       goNext,
-      updateData,
       newUserSignUp,
     };
   },

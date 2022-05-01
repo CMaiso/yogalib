@@ -1,5 +1,5 @@
 <template>
-  <div class="relative h-full w-full bg-gray-50 font-body">
+  <div class="relative flex min-h-screen flex-col bg-gray-50 font-body">
     <NavBar />
     <Nuxt />
   </div>
