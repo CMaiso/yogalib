@@ -21,7 +21,9 @@
       v
     />
     <div v-for="error of v.$errors" :key="error.$uid">
-      <div class="mt-1 text-secondary">{{ error.$message }}</div>
+      <div class="mt-1 text-xs text-sm font-semibold text-secondary">
+        {{ error.$message }}
+      </div>
     </div>
   </div>
 </template>
