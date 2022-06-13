@@ -10,11 +10,14 @@
       <component :is="currentStep" :user="state"></component>
     </KeepAlive>
     <div class="flex">
-      <FormButton v-if="state.currentStepNumber > 1" @click="goBack">
+      <FormButton v-if="currentStepNumber > 1" @click="goBack">
         Précédent
       </FormButton>
-      <FormButton @click="goNext" :disabled="!state.valid">
-        {{ lastStep ? 'Valider' : 'Suivant' }}
+      <FormButton v-if="!lastStep" @click="goNext">
+        {{ 'Suivant' }}
+      </FormButton>
+      <FormButton v-if="lastStep" @click="newUserSignUp">
+        {{ 'Valider' }}
       </FormButton>
     </div>
   </div>
@@ -54,6 +57,7 @@ export default defineComponent({
     const state = reactive({
       email: '',
       password: '',
+      passwordConfirmation: '',
       firstName: '',
       lastName: '',
       phone: '',
@@ -72,7 +76,6 @@ export default defineComponent({
       SocialInformation,
       Description,
     ]);
-    const valid = ref(false);
     const length = computed(() => {
       return steps.value.length;
     });
@@ -90,29 +93,27 @@ export default defineComponent({
     });
 
     const goBack = () => {
-      state.currentStepNumber--;
-      state.valid = true;
+      currentStepNumber.value--;
     };
     const goNext = () => {
-      if (lastStep.value) return;
-      state.currentStepNumber++;
-      state.valid = false;
+      currentStepNumber.value++;
     };
     const newUserSignUp = async () => {
-      const newUserSignUp = this.$fire.functions.httpsCallable('newUserSignUp');
-
-      await newUserSignUp({
-        email: this.email.toLowerCase(),
-        password: this.password,
-        firstName: stringHelpers.capitalize(this.firstName),
-        lastName: stringHelpers.capitalize(this.lastName),
-        phone: this.phone,
-      });
+      // TODO: add validation condition before sending the form
+      console.log("send !")
+      // const newUserSignUp = this.$fire.functions.httpsCallable('newUserSignUp');
+      //
+      // await newUserSignUp({
+      //   email: this.email.toLowerCase(),
+      //   password: this.password,
+      //   firstName: stringHelpers.capitalize(this.firstName),
+      //   lastName: stringHelpers.capitalize(this.lastName),
+      //   phone: this.phone,
+      // });
     };
 
     return {
       state,
-      valid,
       steps,
       currentStepNumber,
       formattedProgress,

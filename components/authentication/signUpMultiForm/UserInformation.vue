@@ -48,7 +48,7 @@
 import FormInput from '~/components/form/input.vue';
 import FormTitle from '~/components/form/title.vue';
 import FormCard from '~/components/form/card.vue';
-import { email, minLength, maxLength, required } from '@vuelidate/validators';
+import { email, minLength, maxLength, required, sameAs } from '@vuelidate/validators';
 import { defineComponent } from '@nuxtjs/composition-api';
 import useVuelidate from '@vuelidate/core';
 
@@ -65,8 +65,8 @@ export default defineComponent({
       },
       passwordConfirmation: {
         required,
-        // sameAsPassword: sameAs(state.password),
-        //TODO: create a custom validator
+        // sameAsPassword: sameAs(props.user?.password),
+        // TODO: Need custom validator because of vuelidate composition API
         // https://stackoverflow.com/questions/67938208/vuelidate-using-vue-2-6-and-composition-api
       },
       firstName: {
@@ -90,5 +90,3 @@ export default defineComponent({
   },
 });
 </script>
-
-<style scoped></style>
