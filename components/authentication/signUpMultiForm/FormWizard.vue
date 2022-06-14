@@ -67,6 +67,7 @@ export default defineComponent({
       instagram: '',
       facebook: '',
       website: '',
+      description: '',
     });
 
     const currentStepNumber = ref(1);
@@ -100,7 +101,7 @@ export default defineComponent({
     };
     const newUserSignUp = async () => {
       // TODO: add validation condition before sending the form
-      console.log("send !")
+      console.log("sent !")
       // const newUserSignUp = this.$fire.functions.httpsCallable('newUserSignUp');
       //
       // await newUserSignUp({
