@@ -12,6 +12,7 @@ export default defineComponent({
   props: {
     title: { type: String, default: false },
   },
+  // TODO: add responsive style
 });
 </script>
 

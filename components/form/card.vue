@@ -11,7 +11,9 @@ import { defineComponent } from '@nuxtjs/composition-api';
 
 export default defineComponent({
   name: 'form-card',
-});
+}
+// TODO: add a responsive fix size
+);
 </script>
 
 <style scoped></style>
